@@ -13,17 +13,27 @@ const prisma = new PrismaClient();
 const app = express();
 const PORT = process.env.PORT || 4000;
 
+// Define allowed origins. The frontend URL can be a comma-separated list.
+const allowedOrigins = (process.env.FRONTEND_URL || "http://localhost:3000")
+  .split(",")
+  .map((origin) => origin.trim());
+
 // explicit CORS options so preflight allows Authorization header
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || "http://localhost:3000",
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl requests) or from whitelisted origins.
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 app.use(cors(corsOptions));
 app.use(express.json({ limit: "5mb" }));
-// Explicitly allow preflight for all routes (helps debug CORS preflight failures)
-app.options("*", cors(corsOptions));
 
 // simple request logger to surface incoming requests in backend logs
 app.use((req, res, next) => {
@@ -72,7 +82,6 @@ if (process.env.FIREBASE_SERVICE_ACCOUNT) {
 }
 
 // Middlewares
-app.use(express.json({ limit: "5mb" }));
 const upload = multer({ storage: multer.memoryStorage() });
 
 // Auth middleware: prefers verifying Firebase ID token. For local dev you may use x-dev-uid header.
