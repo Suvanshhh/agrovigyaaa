@@ -116,17 +116,19 @@ const Profile = () => {
   const [notifications, setNotifications] = useState(notificationsInitial);
   const [showSettings, setShowSettings] = useState(false);
 
-  // Helper to call backend with Firebase ID token
-  const apiFetch = async (path, opts = {}) => {
-    const base = process.env.REACT_APP_API_URL || "";
-    const auth = getAuth();
-    const user = auth.currentUser;
-    if (!user) throw new Error("Not authenticated");
-    const token = await user.getIdToken();
-    const headers = opts.headers || {};
-    headers["Authorization"] = `Bearer ${token}`;
-    return fetch(base + path, { ...opts, headers });
-  };
+// ✅ Updated apiFetch to use env vars with fallback
+const apiFetch = async (path, opts = {}) => {
+  const base =
+    process.env.REACT_APP_API_URL || "http://localhost:4000"; // fallback for dev
+  const auth = getAuth();
+  const user = auth.currentUser;
+  if (!user) throw new Error("Not authenticated");
+  const token = await user.getIdToken();
+  const headers = opts.headers || {};
+  headers["Authorization"] = `Bearer ${token}`;
+  return fetch(`${base}${path}`, { ...opts, headers });
+};
+
 
   // Persist experiences/notifications to backend when they change
   useEffect(() => {
