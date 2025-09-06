@@ -14,7 +14,7 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 // Define allowed origins. The frontend URL can be a comma-separated list.
-const allowedOrigins = (process.env.FRONTEND_URL || "http://localhost:3000")
+const allowedOrigins = (process.env.FRONTEND_URL|| "http://localhost:3000" || "https://agrovigyaaa-2tok.vercel.app" || "https://agrovigyaaa-production.up.railway.app" || "http://localhost:3000")
   .split(",")
   .map((origin) => origin.trim());
 
