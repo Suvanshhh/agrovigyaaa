@@ -1,0 +1,143 @@
+/* Hero Section */
+.heroSection {
+    position: relative;
+    height: 100vh; /* Full viewport height */
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-image: url('https://i.postimg.cc/j2tXv7Cn/rice-field-background.jpg');
+    background-size: cover;
+    background-position: center;
+    margin-top: 0; /* Remove margin to allow hero to go behind navbar */
+    padding-top: 0; /* No padding needed at top */
+  }
+  
+
+/* Overlay for better contrast */
+.heroOverlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+/* Content Styling */
+.heroContent {
+    position: relative;
+    max-width: 90%;
+    z-index: 1;
+    color: (255, 255, 255, 0.703);
+}
+/* Responsive Typography */
+.heroTitle {
+    color: white !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 2;
+    font-size: clamp(1.5rem, 5vw, 3rem);
+    font-weight: bold;
+    animation: fadeInUp 1s ease-in-out;
+    margin-bottom: 20px; /* Increased space between title and subtitle */
+}
+
+.heroSubtitle {
+    color: rgba(255, 255, 255, 0.703);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 2;
+    font-size: clamp(0.8rem, 2.5vw, 1.2rem);
+    animation: fadeInUp 1.2s ease-in-out;
+    margin-top: 20px; /* Increased space between title and subtitle */
+    margin-bottom: 15px; /* Reduced space between subtitle and buttons */
+}
+
+/* Call to Action Button */
+.ctaButton {
+    display: inline-block;
+    background: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: 0.3s;
+    font-size: clamp(0.9rem, 2vw, 1rem);
+    margin-top: 20px; /* Added space above the button */
+}
+
+.ctaButton:hover {
+    background: #fbbf24;
+}
+
+/* Navigation Buttons */
+.prevButton,
+.nextButton {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    font-size: clamp(0.9rem, 1.5vw, 1rem);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    width: clamp(30px, 3vw, 40px);
+    height: clamp(30px, 3vw, 40px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.prevButton {
+    left: 10px;
+}
+
+.nextButton {
+    right: 10px;
+}
+
+.prevButton:hover,
+.nextButton:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+/* 🔹 Responsive Adjustments */
+@media (max-width: 768px) {
+    .heroSection {
+        height: 70vh; /* Slightly reduced height for smaller screens */
+    }
+
+    .prevButton, .nextButton {
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .heroSection {
+        height: 60vh;
+    }
+
+    .heroTitle {
+        font-size: 1.5rem;
+    }
+
+    .heroSubtitle {
+        font-size: 0.9rem;
+    }
+
+    .ctaButton {
+        padding: 8px 16px;
+        font-size: 0.8rem;
+    }
+
+    .prevButton, .nextButton {
+        width: 25px;
+        height: 25px;
+        font-size: 0.7rem;
+    }
+}

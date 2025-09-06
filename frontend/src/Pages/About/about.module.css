@@ -1,0 +1,369 @@
+body {
+  font-family: "Poppins", "Arial", sans-serif;
+  background: #fff;
+  color: #1B3738;
+  line-height: 1.6;
+}
+
+/* Hero Section */
+.heroSection {
+  position: relative;
+  background: #393939;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 32px;
+  margin-bottom: 0;
+}
+
+.heroOverlay {
+  display: none;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+}
+
+.heroTitle {
+  color: #fff !important;
+  font-size: 2.2rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.scrollIndicator {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  animation: bounce 2s infinite;
+}
+
+.chevron {
+  color: #fff;
+  font-size: 28px;
+}
+
+.whoWeAreSection {
+  background: #fff;
+  /* border-radius: 0 0 32px 32px; */
+  margin-top: -1px;
+  padding: 32px;
+  box-shadow: 0 8px 32px rgba(20, 123, 44, 0.04);
+}
+.sectionTitle {
+  color: #1b3738;
+  font-size: 2.1rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 12px;
+  padding-top: 30px;
+  letter-spacing: 0.5px;
+}
+
+.whoWeAreContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 36px;
+  padding: 20px;
+}
+
+.aboutText {
+  max-width: 900px;
+  margin: 0 auto 30px auto;
+  font-size: 1.08rem;
+  color: #222;
+  text-align: center;
+  line-height: 1.7;
+  animation: fadeIn 1.2s;
+}
+
+/* Feature Cards Grid */
+.featureGrid {
+  display: grid;
+  /* grid-template-columns: 1fr 1fr; */
+  grid-template-rows: repeat(2, 180px);
+  gap: 5px;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.featureCard {
+  position: relative;
+  border-radius: 32px 0px 32px 0px;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  min-height: 160px;
+  /* box-shadow: 0 4px 24px rgba(13, 74, 54, 0.08); */
+  animation: fadeIn 1.2s;
+}
+
+.featureBg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: cover;
+  /* border-radius: 0px 20px 0px 20px; */
+  background-position: center;
+  /* filter: brightness(0.8); */
+  z-index: 1;
+}
+
+.featureContent {
+  position: relative;
+  z-index: 2;
+  color: #fff;
+  padding: 26px 32px;
+  width: 100%;
+  /* background: linear-gradient(to top, rgba(13, 74, 54, 0.72) 60%, rgba(0,0,0,0) 100%); */
+  border-radius: 0 0 32px 32px;
+}
+
+.featureCard h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 7px;
+}
+
+.featureCard p {
+  font-size: 1.03rem;
+}
+
+/* Vision Section */
+.visionSection {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 28px 0 0 0;
+  background: #fff;
+}
+
+.visionCard {
+  background: #e8f5e9;
+  border-radius: 0px 32px 0px 32px;
+  padding: 36px 30px;
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  box-shadow: 0 4px 24px rgba(13, 74, 54, 0.1);
+  text-align: left;
+  animation: fadeInUp 1.2s;
+}
+
+.visionCard h2 {
+  color: #0d7c20;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.visionCard p {
+  color: #222;
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+/* Mentors, Founder, Team Sections */
+.mentorsSection,
+.founderSection {
+  background: #fff;
+  padding: 34px 0 0 0;
+}
+.teamSection {
+  background: #fff;
+  padding: 34px 0 60px 0;
+}
+
+.teamGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+  margin-top: 18px;
+}
+
+.teamCard {
+  background: #fff;
+  border-radius: 0px 24px 0px 24px;
+  box-shadow: 0 4px 16px rgba(13, 74, 54, 0.09);
+  padding: 28px 18px 18px 18px;
+  width: 180px;
+  min-height: 220px;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+  animation: fadeInUp 1.2s;
+}
+
+.teamCard:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 8px 32px rgba(13, 74, 54, 0.18);
+}
+
+.teamImage {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #1b3738;
+  margin: 0 auto 13px auto;
+  background: #fff;
+}
+
+.teamName {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1b3738;
+  margin-bottom: 4px;
+}
+
+.teamRole {
+  font-size: 0.93rem;
+  color: #3d5c47;
+}
+
+.founderName {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1b3738;
+  margin-bottom: 34px;
+  text-align: center;
+}
+
+.founderSection {
+  background: white;
+  /* padding: 46px 0 0 0; */
+  text-align: center;
+}
+
+.founderCard {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px 24px;
+  width: 280px;
+  margin: 30px auto;
+  /* box-shadow: 0 4px 20px rgba(27, 55, 56, 0.12); */
+  animation: fadeInUp 1.2s;
+  transition: transform 0.3s ease;
+}
+
+.founderImage {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #1b3738;
+  margin: 0 auto 13px auto;
+  background: #fff;
+  display: block;
+  
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.fadeInLeft {
+  animation: fadeInLeft 1.2s;
+}
+.fadeInRight {
+  animation: fadeInRight 1.2s;
+}
+.fadeInUp {
+  animation: fadeInUp 1.2s;
+}
+
+/* Responsive Design */
+@media (max-width: 1100px) {
+  .featureGrid {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, 180px);
+  }
+  .visionCard {
+    padding: 24px 10px;
+  }
+}
+
+@media (max-width: 700px) {
+  .heroSection {
+    padding-left: 16px;
+  }
+  .featureGrid {
+    gap: 12px;
+  }
+  .teamGrid {
+    gap: 14px;
+  }
+  .teamCard,
+  .founderCard {
+    width: 98vw;
+    min-width: 0;
+  }
+  .visionCard {
+    padding: 14px 4vw;
+  }
+  .whoWeAreSection,
+  .mentorsSection,
+  .founderSection,
+  .teamSection {
+    padding: 18px 0 0 0;
+  }
+}
+
+@media (max-width: 500px) {
+  .heroTitle {
+    font-size: 1.2rem;
+  }
+  .teamImage,
+  .founderImage {
+    width: 60px;
+    height: 60px;
+  }
+  .featureCard {
+    min-height: 120px;
+  }
+}

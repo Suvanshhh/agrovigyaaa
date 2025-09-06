@@ -1,0 +1,172 @@
+/* General Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+    background: #1B3738;
+    color: #333;
+}
+
+/* Mobile First Layout */
+.pageWrapper {
+    min-height: 100vh;
+    background: #1B3738;
+    display: flex;
+    flex-direction: column;
+}
+
+.loginSplit {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #1B3738;
+    padding: 20px;
+}
+
+.rightPane {
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 20px;
+}
+
+.illustration {
+    width: 100%;
+    height: auto;
+}
+
+.leftPane {
+    width: 100%;
+    max-width: 400px;
+}
+
+.loginCard {
+    width: 100%;
+    background: #1C4F47;
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.loginTitle {
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.input {
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    border-radius: 10px;
+    border: none;
+    background: #f4f4f4;
+    font-size: 1rem;
+    outline: none;
+}
+
+.loginButton {
+    width: 100%;
+    padding: 12px 0;
+    background: #1ec37b;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 16px;
+    cursor: pointer;
+}
+
+.googleButton {
+    width: 100%;
+    padding: 12px 0;
+    background: #fff;
+    color: #333;
+    border: none;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    cursor: pointer;
+}
+
+.googleIcon {
+    width: 22px;
+    height: 22px;
+}
+
+.forgotRow {
+    text-align: right;
+    margin-bottom: 10px;
+}
+
+.forgotRow a {
+    color: #8fd6b3;
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.signupPrompt {
+    margin-top: 16px;
+    color: #d3f7e6;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.signupPrompt a {
+    color: #fff;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.errorMessage {
+    background: #ffeaea;
+    color: #c0392b;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+/* Desktop Layout */
+@media (min-width: 992px) {
+    .loginSplit {
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    .rightPane {
+        order: 2;
+        max-width: 500px;
+        margin-bottom: 0;
+    }
+
+    .leftPane {
+        order: 1;
+        max-width: 400px;
+    }
+
+    .loginTitle {
+        font-size: 1.8rem;
+    }
+    .googleIcon {
+        width: 32px;
+        height: 32px;
+    }
+}

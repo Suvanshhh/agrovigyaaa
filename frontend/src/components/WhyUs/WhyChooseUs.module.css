@@ -1,0 +1,162 @@
+.whyChooseUs {
+  background: #f9f9f9;
+  padding: 3rem 2rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.topRow {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  gap: 2rem;
+  align-items: stretch;
+  margin-bottom: 2.5rem;
+}
+
+.imageCard {
+  position: relative;
+  flex: 1 1 55%;
+  min-width: 320px;
+  min-height: 260px;
+
+  border-radius: 0rem 4rem 0rem 4rem;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  box-shadow: 0 4px 24px 0 rgba(27, 55, 56, 0.10);
+}
+
+.cardImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.imageOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 4rem 2.5rem 2.5rem 2.5rem;
+  background: linear-gradient(0deg, rgba(27,55,56,0.72) 60%, rgba(27,55,56,0.01) 100%);
+  color: #fff;
+  text-align: left;
+}
+
+.overlayTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+.overlayDesc {
+  font-size: 1.1rem;
+  font-weight: 400;
+  opacity: 0.9;
+}
+
+.topText {
+  flex: 1 1 45%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding-top: 1.5rem;
+  padding-left: 1rem;
+}
+
+.topText h2 {
+  color: #1B3738;
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0;
+  text-align: left;
+}
+
+.bottomRow {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  gap: 2rem;
+  margin-top: 0.5rem;
+}
+
+.infoCard {
+  flex: 1 1 50%;
+  background: #1B3738;
+  border-radius: 3rem 0rem 3rem 0rem;
+  padding: 2.5rem 2rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  min-width: 260px;
+  min-height: 180px;
+  color: #fff;
+  background: linear-gradient(135deg, #1B3738 0%, #2A5456 100%);
+  box-shadow: 0 8px 32px rgba(27, 55, 56, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.infoCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(27, 55, 56, 0.2);
+}
+
+.infoCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+.infoTitle {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #fff;
+}
+
+.infoDesc {
+  font-size: 1rem;
+  font-weight: 400;
+  opacity: 0.92;
+  color: #fff;
+}
+
+@media (max-width: 900px) {
+  .topRow, .bottomRow {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .topText {
+    padding-top: 0.5rem;
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .whyChooseUs {
+    padding: 2rem 0.5rem 1rem 0.5rem;
+  }
+  .imageCard, .infoCard {
+    min-width: 0;
+    border-radius: 1.4rem;
+    padding: 1.2rem 0.7rem;
+  }
+  .imageOverlay {
+    padding: 2rem 1.7rem;
+  }
+  .overlayTitle {
+    font-size: 1.2rem;
+  }
+}

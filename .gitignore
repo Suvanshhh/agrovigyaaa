@@ -1,0 +1,7 @@
+
+
+node_modules/
+.env
+backend/serviceAccountKey.json
+
+\n# Ignore frontend build and dependencies\n/frontend/build/\n/frontend/node_modules/
