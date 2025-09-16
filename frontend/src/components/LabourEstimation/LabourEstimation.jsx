@@ -10,26 +10,8 @@ const cropOptions = [
 ];
 
 const areaOptions = [
-  "0.5",
-  "1",
-  "1.5",
-  "2",
-  "2.5",
-  "3",
-  "3.5",
-  "4",
-  "4.5",
-  "5",
-  "5.5",
-  "6",
-  "6.5",
-  "7",
-  "7.5",
-  "8",
-  "8.5",
-  "9",
-  "9.5",
-  "10",
+  "0.5", "1", "1.5", "2", "2.5", "3", "3.5", "4", "4.5",
+  "5", "5.5", "6", "6.5", "7", "7.5", "8", "8.5", "9", "9.5", "10"
 ];
 
 const seasonOptions = ["Spring", "Summer", "Fall", "Winter"];
@@ -59,15 +41,22 @@ const LabourEstimation = () => {
     setResult(null);
 
     try {
-      const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "";
-      const response = await fetch(`${BACKEND_URL}/api/labour-estimate`, {
+      // Choose your preferred environment variable
+      const apiUrl =
+        process.env.REACT_APP_API_URL ||
+        process.env.REACT_APP_BACKEND_URL ||
+        "";
+
+      const response = await fetch(`${apiUrl}/api/labour-estimate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
+
       if (!response.ok) {
         throw new Error(t("labour.errorFetch"));
       }
+
       const data = await response.json();
       if (data.error) {
         setError(data.error);
@@ -170,23 +159,19 @@ const LabourEstimation = () => {
             <strong>{t("labour.crop")}:</strong> {result.crop}
           </p>
           <p>
-            <strong>{t("labour.area")}:</strong> {result.area}{" "}
-            {t("labour.hectares")}
+            <strong>{t("labour.area")}:</strong> {result.area} {t("labour.hectares")}
           </p>
           <p>
-            <strong>{t("labour.season")}:</strong>{" "}
-            {result.season ? result.season : t("labour.na")}
+            <strong>{t("labour.season")}:</strong> {result.season ? result.season : t("labour.na")}
           </p>
           <p>
             <strong>{t("labour.wageType")}:</strong> {result.wage_type}
           </p>
           <p>
-            <strong>{t("labour.totalLabour")}:</strong>{" "}
-            {result.total_labour_per_ha} {t("labour.personDays")}
+            <strong>{t("labour.totalLabour")}:</strong> {result.total_labour_per_ha} {t("labour.personDays")}
           </p>
           <p>
-            <strong>{t("labour.costPerHectare")}:</strong> ₹
-            {result.cost_per_hectare}
+            <strong>{t("labour.costPerHectare")}:</strong> ₹{result.cost_per_hectare}
           </p>
           <p>
             <strong>{t("labour.totalCost")}:</strong> ₹{result.total_cost}
