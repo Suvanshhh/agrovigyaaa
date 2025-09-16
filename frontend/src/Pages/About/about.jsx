@@ -24,12 +24,20 @@ const teamMembers = [
   },
   {
     key: "shivam",
-    img: "https://i.postimg.cc/fLkx8mPW/shivam-pic.jpg",
+    img: "https://i.postimg.cc/DZFw6Kcw/shivam.jpg",
   },
   {
     key: "ishaDeolakar",
     img: "https://i.postimg.cc/NfMkPDmL/ISHa.jpg",
   },
+  {
+    key: "koena",
+    img : "https://i.postimg.cc/L5WqNbXQ/koena.jpg"
+  },
+  {
+    key : "gargi",
+    img : "https://i.postimg.cc/L4QZ9nTk/gargi.jpg"
+  }
 ];
 
 const projectDirector = {

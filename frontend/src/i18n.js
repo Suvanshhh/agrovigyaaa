@@ -95,6 +95,14 @@ i18n
               name: "Isha Deolakar",
               role: "UI/UX & Graphic Designer",
             },
+            koena : {
+              name : "Koena Ganguly",
+              role : "Researcher"
+            },
+            gargi : {
+              name : "Gargi Senad",
+              role : "Researcher"
+            }
           },
           ourVision: "Our Vision",
           visionContent: "Our vision is to transform the industry...",
