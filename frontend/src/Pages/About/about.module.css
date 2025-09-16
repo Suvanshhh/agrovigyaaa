@@ -54,6 +54,7 @@ body {
   padding: 32px;
   box-shadow: 0 8px 32px rgba(20, 123, 44, 0.04);
 }
+
 .sectionTitle {
   color: #1b3738;
   font-size: 2.1rem;
@@ -164,6 +165,7 @@ body {
   font-weight: 700;
   margin-bottom: 12px;
 }
+
 .visionCard p {
   color: #222;
   font-size: 1.05rem;
@@ -172,13 +174,21 @@ body {
 
 /* Mentors, Founder, Team Sections */
 .mentorsSection,
-.founderSection {
-  background: #fff;
-  padding: 34px 0 0 0;
-}
+.founderSection,
 .teamSection {
-  background: #fff;
+  background: #fff !important; /* Added !important to override any conflicting styles */
+  padding: 34px 0 0 0;
+  margin: 0; /* Reset any margins */
+  border: none; /* Reset any borders */
+}
+
+.teamSection {
+  background: #fff !important; /* Explicit override for team section */
   padding: 34px 0 60px 0;
+  margin: 0; /* Reset margins */
+  border: none; /* Remove any borders */
+  border-top: none !important; /* Specifically remove top border */
+  box-shadow: none; /* Remove any box shadows that might appear as lines */
 }
 
 .teamGrid {
@@ -232,37 +242,49 @@ body {
   font-size: 1.1rem;
   font-weight: 600;
   color: #1b3738;
-  margin-bottom: 34px;
-  text-align: center;
+  margin-bottom: 4px;
+}
+
+.founderRole {
+  font-size: 0.93rem;
+  color: #3d5c47;
 }
 
 .founderSection {
-  background: white;
-  /* padding: 46px 0 0 0; */
+  background: #fff !important; /* Explicit override */
+  padding: 34px 0 0 0;
   text-align: center;
+  margin: 0; /* Reset margins */
+  border: none; /* Remove borders */
 }
 
 .founderCard {
+  display: block;
   background: #fff;
-  border-radius: 16px;
-  padding: 32px 24px;
-  width: 280px;
+  border-radius: 0px 24px 0px 24px;
+  box-shadow: 0 4px 16px rgba(13, 74, 54, 0.09);
+  padding: 28px 18px 18px 18px;
+  width: 180px;
+  min-height: 220px;
   margin: 30px auto;
-  /* box-shadow: 0 4px 20px rgba(27, 55, 56, 0.12); */
   animation: fadeInUp 1.2s;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.founderCard:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 8px 32px rgba(13, 74, 54, 0.18);
 }
 
 .founderImage {
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
   object-fit: cover;
-  border: 4px solid #1b3738;
+  border: 3px solid #1b3738;
   margin: 0 auto 13px auto;
   background: #fff;
   display: block;
-  
 }
 
 /* Animations */
@@ -276,6 +298,7 @@ body {
     transform: translateY(0);
   }
 }
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -286,6 +309,7 @@ body {
     transform: translateY(0);
   }
 }
+
 @keyframes fadeInLeft {
   from {
     opacity: 0;
@@ -296,6 +320,7 @@ body {
     transform: translateX(0);
   }
 }
+
 @keyframes fadeInRight {
   from {
     opacity: 0;
@@ -310,9 +335,11 @@ body {
 .fadeInLeft {
   animation: fadeInLeft 1.2s;
 }
+
 .fadeInRight {
   animation: fadeInRight 1.2s;
 }
+
 .fadeInUp {
   animation: fadeInUp 1.2s;
 }
