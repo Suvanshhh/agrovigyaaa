@@ -37,6 +37,10 @@ const teamMembers = [
   {
     key : "gargi",
     img : "https://i.postimg.cc/L4QZ9nTk/gargi.jpg"
+  },
+  {
+    key : "urukriti",
+    img : "https://i.postimg.cc/TYB99NgL/urukriti.jpg"
   }
 ];
 
@@ -122,7 +126,10 @@ const About = () => {
             <div className={`${styles.featureCard} ${styles.fadeInRight}`}>
               <div
                 className={styles.featureBg}
-                style={{ backgroundColor: "#0d7c20" }}
+                style={{
+                  backgroundImage:
+                    "url('https://i.postimg.cc/G2sGgGYL/focused.jpg')",
+                }}
               />
               <div className={styles.featureContent}>
                 <h3>{t("aboutUs.focusedApproach")}</h3>

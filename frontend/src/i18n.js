@@ -102,6 +102,10 @@ i18n
             gargi : {
               name : "Gargi Senad",
               role : "Researcher"
+            },
+            urukriti : {
+              name : "Urukriti Gupta",
+              role : "Researcher"
             }
           },
           ourVision: "Our Vision",
@@ -505,7 +509,7 @@ i18n
               role: "डेवलपर",
             },
             ishaDeolakar: {
-              name: "ईशा देओलकर",
+              name: "ईशा देवळेकर",
               role: "UI/UX और ग्राफिक डिज़ाइनर",
             },
           },
@@ -907,7 +911,7 @@ i18n
               role: "डेवलपर",
             },
             ishaDeolakar: {
-              name: "ईशा देओलकर",
+              name: "ईशा देवळेकर",
               role: "UI/UX और ग्राफिक डिज़ाइनर",
             },
           },
