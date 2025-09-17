@@ -9,6 +9,7 @@ import BlogSection from "../../components/Blog/blog";
 
 import WhyChooseUs from "../../components/WhyUs/WhyUs";
 import ServicesSection from "../../components/Services/ServicesSection";
+import GovernmentInitiatives from "../../components/GovtInitiatives/GovernmentInitiatives";
 import HeroSlider from "../../components/Hero/Hero";
 
 const Home = () => {
@@ -22,6 +23,7 @@ const Home = () => {
       <HeroSlider />
       {/* Services Section */}
       <ServicesSection /> {/* Replaced inline code with the new component */}
+      < GovernmentInitiatives/>
       {/* Why Choose Us Section */}
       <WhyChooseUs />
   
