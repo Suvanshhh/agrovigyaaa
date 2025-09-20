@@ -49,7 +49,8 @@ const CropRecommendation = () => {
         return;
       }
       const idToken = await user.getIdToken();
-      const response = await fetch(`/api/crop-recommendation`, {
+      const base = process.env.REACT_APP_API_BASE_URL || "";
+      const response = await fetch(`${base}/api/crop-recommendation`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -58,8 +59,13 @@ const CropRecommendation = () => {
         },
         body: JSON.stringify(formData),
       });
-
-      const data = await response.json();
+      let data = null;
+      const text = await response.text();
+      try { data = text ? JSON.parse(text) : null; } catch { /* non-JSON or empty */ }
+      if (!response.ok) {
+        const msg = (data && data.error) || `${response.status} ${response.statusText}`;
+        throw new Error(msg);
+      }
       if (data.error) {
         setResult(t("crop_recom.resultError", { error: data.error }));
         setDetails(null);
