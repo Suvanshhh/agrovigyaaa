@@ -6,12 +6,15 @@ import { PrismaClient } from "@prisma/client";
 import cloudinary from "cloudinary";
 import streamifier from "streamifier";
 import admin from "firebase-admin";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 dotenv.config();
 
 const prisma = new PrismaClient();
 const app = express();
 const PORT = process.env.PORT || 4000;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-1.5-flash";
 
 // Define allowed origins. The frontend URL can be a comma-separated list.
 // const allowedOrigins = (process.env.FRONTEND_URL|| "http://localhost:3000" || "https://agrovigyaaa-2tok.vercel.app" || "https://agrovigyaaa-production.up.railway.app" || "http://localhost:3000")
@@ -268,6 +271,9 @@ app.patch("/api/profile/me/lists", verifyFirebaseToken, async (req, res) => {
 
 const server = app.listen(PORT, () => {
   console.log(`Backend listening on ${PORT}`);
+  if (!GEMINI_API_KEY) {
+    console.warn("[WARN] GEMINI_API_KEY is not set. /api/crop-recommendation will return an error.");
+  }
 });
 
 // Handle server errors (e.g. port already in use) with a friendly message
@@ -285,5 +291,255 @@ server.on("error", (err) => {
 
 // simple health endpoint for quick connectivity checks
 app.get("/health", (req, res) => {
-  res.json({ ok: true, now: new Date().toISOString() });
+  res.json({
+    ok: true,
+    now: new Date().toISOString(),
+    geminiConfigured: Boolean(GEMINI_API_KEY),
+    firebaseAdminInitialized,
+  });
+});
+
+// --- Labour Estimation Route -------------------------------------------------
+// The original labour estimation Python service is currently commented out.
+// To make the frontend feature functional, we provide a lightweight estimation
+// here. This can later be replaced with a proper ML service or connected to
+// the restored Flask app behind an internal call.
+// Input JSON body: { crop_fname, area, season, wage_type }
+// Response matches what the frontend `LabourEstimation.jsx` expects:
+// {
+//   crop, area, season, wage_type,
+//   total_labour_per_ha, cost_per_hectare, total_cost
+// }
+
+// Simple canonical dataset (can be moved to DB later)
+const LABOUR_BASE = [
+  { crop: "Tomato", labourPerHa: 32, govtWage: 350, expectedWage: 450 },
+  { crop: "Potato", labourPerHa: 28, govtWage: 350, expectedWage: 450 },
+  { crop: "Onion", labourPerHa: 40, govtWage: 350, expectedWage: 450 },
+];
+
+// Seasonal multipliers roughly reflecting variation (placeholder values)
+const SEASON_FACTORS = { Spring: 1.0, Summer: 1.1, Fall: 0.95, Winter: 0.9 };
+
+// Farm size efficiency (larger farms gain slight efficiency per ha)
+function efficiencyForArea(area) {
+  if (area <= 1) return 1.0;
+  if (area <= 3) return 0.97;
+  if (area <= 5) return 0.94;
+  return 0.9; // >5 ha
+}
+
+app.post("/api/labour-estimate", (req, res) => {
+  try {
+    const { crop_name, area, season, wage_type } = req.body || {};
+    if (!crop_name || !area || !season || !wage_type) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+    const numericArea = Number(area);
+    if (!Number.isFinite(numericArea) || numericArea <= 0) {
+      return res.status(400).json({ error: "Area must be a positive number" });
+    }
+    const record = LABOUR_BASE.find(
+      (r) => r.crop.toLowerCase() === String(crop_name).toLowerCase()
+    );
+    if (!record) return res.status(404).json({ error: "Crop not supported" });
+    const seasonFactor = SEASON_FACTORS[season] || 1.0;
+    const eff = efficiencyForArea(numericArea);
+    // Adjusted labour per ha
+    const labourPerHaAdjusted = record.labourPerHa * seasonFactor * eff;
+    // Wage selection
+    const wage = wage_type === "Expected" ? record.expectedWage : record.govtWage;
+    const costPerHa = labourPerHaAdjusted * wage;
+    const totalCost = costPerHa * numericArea;
+    return res.json({
+      crop: record.crop,
+      area: numericArea,
+      season,
+      wage_type,
+      total_labour_per_ha: Math.round(labourPerHaAdjusted),
+      cost_per_hectare: Math.round(costPerHa),
+      total_cost: Math.round(totalCost),
+    });
+  } catch (e) {
+    console.error("/api/labour-estimate failed", e);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// --- Crop Recommendation via Gemini ----------------------------------------
+// Input body:
+// {
+//   Nitrogen, Phosphorus, Potassium, Temperature, Humidity, pH, Rainfall
+// }
+// Output:
+// {
+//   crop: string,
+//   rationale: string,
+//   category: string,              // e.g., Cereal/Pulse/Oilseed/Vegetable/Spice/Fruit/Cash Crop
+//   confidence: number,            // 0..1 subjective
+//   top_alternatives: [{crop, reason}],
+//   warnings: string[]
+// }
+app.post("/api/crop-recommendation", verifyFirebaseToken, async (req, res) => {
+  try {
+    const {
+      Nitrogen,
+      Phosphorus,
+      Potassium,
+      Temperature,
+      Humidity,
+      pH,
+      Rainfall,
+      state,
+      district,
+      season,          // e.g., Kharif | Rabi | Zaid (Summer)
+      irrigation,      // None | Occasional | Regular
+      soil_type,       // Sandy | Loam | Clay | Black (Regur) | Laterite
+      previous_crop,
+      rainfall_band,   // Low | Normal | High
+      goal,            // Cereal | Pulse | Oilseed | Cash | Horticulture | Fodder
+    } = req.body || {};
+
+    // Make numerics optional to support Basic mode. Validate only if provided.
+    const numericKeys = [
+      "Nitrogen",
+      "Phosphorus",
+      "Potassium",
+      "Temperature",
+      "Humidity",
+      "pH",
+      "Rainfall",
+    ];
+    for (const k of numericKeys) {
+      if (req.body?.[k] !== undefined && req.body?.[k] !== "") {
+        if (!Number.isFinite(Number(req.body[k]))) {
+          return res.status(400).json({ error: `Field ${k} must be numeric if provided` });
+        }
+      }
+    }
+
+    if (!GEMINI_API_KEY) {
+      return res.status(500).json({ error: "Server missing GEMINI_API_KEY" });
+    }
+  const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+  const model = genAI.getGenerativeModel({ model: GEMINI_MODEL });
+  const reqLang = (req.headers["x-lang"] || "en").toString().slice(0,5);
+  const language = ["en","hi","mr"].includes(reqLang) ? reqLang : "en";
+
+    // Craft a compact, structured prompt that mimics the RF model behavior with agronomic priors.
+  const langLabel = language === 'hi' ? 'Hindi' : (language === 'mr' ? 'Marathi' : 'English');
+
+  // Allowed crops by state and season (seed list for Maharashtra)
+  const allowedByState = {
+    Maharashtra: {
+      Kharif: ["rice", "soybean", "cotton", "maize", "pigeonpea"],
+      Rabi: ["wheat", "chickpea", "sorghum", "mustard"],
+      Zaid: ["watermelon", "muskmelon", "vegetables", "fodder"],
+      Horticulture: ["onion", "tomato", "pomegranate", "grape"],
+    },
+  };
+  const st = (state || "").trim();
+  const ssn = (season || "").trim();
+  const allowedCrops = (allowedByState[st] && allowedByState[st][ssn]) || null;
+
+  const prompt = `You are an agricultural expert that recommends suitable crops based on soil macro-nutrients and local conditions. Respond strictly in ${langLabel}.
+Given these inputs (units in parentheses):
+- Nitrogen (N, kg/ha): ${Nitrogen !== undefined && Nitrogen !== "" ? Number(Nitrogen) : "unknown"}
+- Phosphorus (P, kg/ha): ${Phosphorus !== undefined && Phosphorus !== "" ? Number(Phosphorus) : "unknown"}
+- Potassium (K, kg/ha): ${Potassium !== undefined && Potassium !== "" ? Number(Potassium) : "unknown"}
+- Temperature (°C): ${Temperature !== undefined && Temperature !== "" ? Number(Temperature) : "unknown"}
+- Humidity (%): ${Humidity !== undefined && Humidity !== "" ? Number(Humidity) : "unknown"}
+- Soil pH: ${pH !== undefined && pH !== "" ? Number(pH) : "unknown"}
+- Rainfall (mm): ${Rainfall !== undefined && Rainfall !== "" ? Number(Rainfall) : "unknown"}
+- Rainfall band: ${rainfall_band || "(not provided)"}
+
+Optional context (use if provided):
+- State: ${st || "(not provided)"}
+- District: ${district || "(not provided)"}
+- Season: ${ssn || "(not provided)"}
+- Irrigation: ${irrigation || "(not provided)"}
+- Soil type: ${soil_type || "(not provided)"}
+- Previous crop: ${previous_crop || "(not provided)"}
+- Rainfall band: ${rainfall_band || "(not provided)"}
+- Goal: ${goal || "(not provided)"}
+
+Mimic the behavior of a balanced RandomForestClassifier trained on grouped crop categories (Cereal, Pulse, Oilseed, Cash Crop (Cotton), Vegetable/Spice/Fruit), while also providing a single best specific crop example. The output JSON values (category names, rationale text, warnings, fertilizer_advice, alternatives.reason) must be written in ${langLabel}.
+If State and Season are provided, treat them as hard constraints. Recommend only crops commonly grown in that state and season. ${allowedCrops ? `For ${st} in ${ssn}, allowedCrops = ${JSON.stringify(allowedCrops)}. Choose from allowedCrops unless none fits; if none fits, explain and suggest the closest feasible option.` : ``}
+Use irrigation and rainfall band to avoid water-heavy crops when irrigation=None or rainfall=Low. If soil type is Black (Regur), consider cotton, soybean, sorghum, and pulses as favorable options. If previous crop is provided, favor rotation (e.g., follow paddy with pulses) to break pest/disease cycles.
+If any numeric value is "unknown", infer conservatively from season/location and clearly reflect any uncertainty in confidence and warnings.
+Consider these heuristics similar to feature importance:
+- Cereal (e.g., rice, maize, wheat) tends to prefer adequate N and moderate pH; rice tolerates high rainfall; wheat/rice differ by cool vs warm temps.
+- Pulses (e.g., chickpea, moong, pigeon pea) often prefer neutral pH (~6.5–7.5) and moderate N.
+- Oilseeds (e.g., mustard, groundnut, soybean) vary: groundnut prefers warm temps and well-drained soils; mustard tolerates cooler temps.
+- Cotton (cash crop) prefers warm temps, neutral pH, and moderate rainfall.
+- Many vegetables/fruits need neutral pH, adequate K, and season-appropriate temperature.
+
+Return STRICT JSON with this schema and no extra text (no markdown, no comments):
+{
+  "crop": "string",                    // best specific crop name (e.g., "rice", "maize", "chickpea", "mustard", "cotton")
+  "category": "string",                // one of: Cereal, Pulse, Oilseed, Cash Crop (Cotton), Vegetable/Spice/Fruit
+  "rationale": "string",
+  "confidence": 0.0,                    // 0..1
+  "top_alternatives": [
+    {"crop": "string", "reason": "string"},
+    {"crop": "string", "reason": "string"}
+  ],
+  "warnings": ["string"],
+  "suitability_score": 0,              // 0..100 subjective score based on fit
+  "fertilizer_advice": "string"       // one or two short lines (e.g., "Apply NPK 10-26-26; adjust pH with lime if <6.0")
+}`;
+
+    const generationConfig = { responseMimeType: "application/json" };
+    const result = await model.generateContent({
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+      generationConfig,
+    });
+    const response = await result.response;
+    const text = response.text();
+
+    // Attempt to parse JSON from the model's response
+    let parsed;
+    try {
+      parsed = JSON.parse(text.trim());
+    } catch (e) {
+      // Fallback: extract JSON block
+  const match = text.match(/\{[\s\S]*\}/);
+      if (match) parsed = JSON.parse(match[0]);
+    }
+    if (!parsed || !parsed.crop) {
+      console.error("Gemini parse failure:", text);
+      return res.status(502).json({ error: "AI response could not be parsed" });
+    }
+
+    // Normalize response fields
+    const safe = {
+      crop: String(parsed.crop),
+      category: parsed.category ? String(parsed.category) : undefined,
+      rationale: parsed.rationale ? String(parsed.rationale) : undefined,
+      confidence: Number(parsed.confidence ?? 0),
+      suitability_score: Number(parsed.suitability_score ?? (parsed.confidence ? Number(parsed.confidence)*100 : 0)),
+      fertilizer_advice: parsed.fertilizer_advice ? String(parsed.fertilizer_advice) : undefined,
+      top_alternatives: Array.isArray(parsed.top_alternatives)
+        ? parsed.top_alternatives.slice(0, 3).map((x) => ({
+            crop: String(x.crop || ""),
+            reason: String(x.reason || ""),
+          }))
+        : [],
+      warnings: Array.isArray(parsed.warnings) ? parsed.warnings.map(String) : [],
+      inputs: { Nitrogen, Phosphorus, Potassium, Temperature, Humidity, pH, Rainfall,
+        state: st || undefined,
+        district: district || undefined,
+        season: ssn || undefined,
+        irrigation: irrigation || undefined,
+        soil_type: soil_type || undefined,
+        previous_crop: previous_crop || undefined,
+        rainfall_band: rainfall_band || undefined,
+        goal: goal || undefined },
+    };
+
+    res.json(safe);
+  } catch (e) {
+    console.error("/api/crop-recommendation failed", e);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
