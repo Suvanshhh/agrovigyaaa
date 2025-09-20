@@ -1,12 +1,12 @@
 .container {
   max-width: 1200px;
-margin: 1rem;
-padding: 2rem 1.8rem;
-background-color: #fff;
-border-radius: 0px 32px;
-box-shadow: 0 8px 32px rgba(20, 123, 44, 0.10);
-text-align: center;
-animation: CropRecommendation_fadeInUp__tXc9Z 1s ease forwards;
+  margin: 1.5rem auto;
+  padding: 2rem 1.8rem;
+  background-color: #fff;
+  border-radius: 0px 32px;
+  box-shadow: 0 8px 32px rgba(20, 123, 44, 0.10);
+  text-align: center;
+  animation: CropRecommendation_fadeInUp__tXc9Z 1s ease forwards;
 }
 /* Center the card on a dark background */
 :global(body) {
@@ -31,9 +31,14 @@ animation: CropRecommendation_fadeInUp__tXc9Z 1s ease forwards;
 
 .form {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
-  width: 100%; /* Added full width */
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  gap: 1rem;
+  width: 100%;
+}
+
+/* Make the submit button span full width under the grid */
+.form .button {
+  grid-column: 1 / -1;
 }
 
 .inputGroup {
@@ -44,10 +49,16 @@ animation: CropRecommendation_fadeInUp__tXc9Z 1s ease forwards;
   width: 100%; /* Added full width */
 }
 
+@media (max-width: 1200px) {
+  .form { grid-template-columns: repeat(3, minmax(180px, 1fr)); }
+}
+
+@media (max-width: 900px) {
+  .form { grid-template-columns: repeat(2, minmax(180px, 1fr)); }
+}
+
 @media (max-width: 700px) {
-  .form {
-    grid-template-columns: 1fr;
-  }
+  .form { grid-template-columns: 1fr; }
 }
 
 .label {
@@ -102,6 +113,30 @@ animation: CropRecommendation_fadeInUp__tXc9Z 1s ease forwards;
   animation: fadeInUp 1s ease forwards;
 }
 
+.details {
+  margin-top: 1rem;
+  text-align: left;
+  background: #f8fffb;
+  border: 1px solid #dff5e9;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+}
+
+.spinner {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  border: 3px solid rgba(255,255,255,0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 /* Animations */
 @keyframes fadeIn {
   from { opacity: 0; }
@@ -134,4 +169,22 @@ animation: CropRecommendation_fadeInUp__tXc9Z 1s ease forwards;
     border-radius: 10px;
     padding: 0.8rem;
   }
+}
+
+.secondaryButton {
+  width: 100%;
+  padding: 0.9rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #147b2c;
+  background: #ffffff;
+  border: 2px solid #1ec37b;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.secondaryButton:hover {
+  background: #e9fff5;
+  border-color: #147b2c;
 }
