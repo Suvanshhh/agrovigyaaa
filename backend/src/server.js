@@ -21,7 +21,23 @@ const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-1.5-flash";
 //   .split(",")
 //   .map((origin) => origin.trim());
 
-app.use(cors()); 
+// CORS: explicitly allow frontend origins and preflight auth headers
+const allowedOrigins = (process.env.FRONTEND_URL || "http://localhost:3000")
+  .split(",")
+  .map((o) => o.trim())
+  .map((o) => o.replace(/^['"]|['"]$/g, "")) // strip quotes if present
+  .map((o) => o.replace(/\/$/, "")); // remove trailing slash
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error("Not allowed by CORS"));
+  },
+  credentials: true,
+  methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Lang"],
+};
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 // explicit CORS options so preflight allows Authorization header
 // const corsOptions = {
