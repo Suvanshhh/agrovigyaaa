@@ -30,11 +30,11 @@ const CropRecommendationPage = () => {
          {t("labour.helpButton")}
         </button>
         <FarmerGuidePopup show={showGuide} onClose={() => setShowGuide(false)} />
-        <div className={styles.contentContainer}>
-          <div className={styles.formSection}>
+        <div className={styles.contentContainerColumn}>
+          <div className={styles.formSectionFull}>
             <CropRecommendation />
           </div>
-          <div className={styles.imageSection}>
+          <div className={styles.imageSectionBelow}>
             <img
               src="https://i.postimg.cc/9MgBBgNs/log-in-signup.png"
               alt={t("crop.imageAlt")}
