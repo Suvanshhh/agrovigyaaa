@@ -22,3 +22,12 @@ Notes
 
 - If you don't have a Firebase service account yet, generate it in Firebase Console > Project Settings > Service Accounts and paste the JSON into `FIREBASE_SERVICE_ACCOUNT` in `.env` or upload the JSON file and set `GOOGLE_APPLICATION_CREDENTIALS`.
 - For local development without Firebase admin, the server accepts header `x-dev-uid` to act as an authenticated user (not secure). Provide this header when testing, or provide a valid Firebase ID token via `Authorization: Bearer <idToken>`.
+
+Gemini-powered crop recommendation
+
+Add these to `backend/.env` to enable the Gemini endpoint `/api/crop-recommendation`:
+
+```
+GEMINI_API_KEY=your_google_ai_studio_key
+GEMINI_MODEL=gemini-1.5-flash
+```

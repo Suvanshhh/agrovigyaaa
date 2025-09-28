@@ -11,6 +11,9 @@ import {
   Camera,
   Trash2,
   Plus,
+  CheckCircle,
+  CloudRain,
+  Lock,
 } from "lucide-react";
 import { getAuth, onAuthStateChanged, updateProfile } from "firebase/auth";
 import { Bar } from "react-chartjs-2";
@@ -573,22 +576,47 @@ const apiFetch = async (path, opts = {}) => {
                       yrs
                     </span>
                     <button
+                      className={`${styles.iconBtn} ${styles.iconEdit}`}
                       aria-label="Edit Experience"
                       onClick={() => handleExpEdit(exp)}
                     >
-                      <Pencil size={16} />
+                      <Pencil size={14} />
                     </button>
                     <button
+                      className={`${styles.iconBtn} ${styles.iconDelete}`}
                       aria-label="Delete Experience"
                       onClick={() => handleExpDelete(exp.id)}
                     >
-                      <Trash2 size={16} />
+                      <Trash2 size={14} />
                     </button>
                   </li>
                 ))
               )}
             </ul>
             <div className={styles.expForm}>
+              <button
+                className={`${styles.expPrimaryBtn} ${styles.expPlusBtn}`}
+                aria-label={
+                  expEditingId ? "Update Experience" : "Add Experience"
+                }
+                onClick={handleExpSave}
+                title={expEditingId ? "Update" : "Add"}
+              >
+                {expEditingId ? <Check size={18} /> : <Plus size={18} />}
+              </button>
+              {expEditingId && (
+                <button
+                  className={styles.expCancelBtn}
+                  aria-label="Cancel Experience Edit"
+                  title="Cancel"
+                  onClick={() => {
+                    setExpEditingId(null);
+                    setExpForm({ role: "", company: "", years: "" });
+                  }}
+                >
+                  <X size={18} />
+                </button>
+              )}
               <input
                 placeholder="Role"
                 name="role"
@@ -609,25 +637,6 @@ const apiFetch = async (path, opts = {}) => {
                 min="0"
                 onChange={handleExpChange}
               />
-              <button
-                aria-label={
-                  expEditingId ? "Update Experience" : "Add Experience"
-                }
-                onClick={handleExpSave}
-              >
-                {expEditingId ? <Check size={16} /> : <Plus size={16} />}
-              </button>
-              {expEditingId && (
-                <button
-                  aria-label="Cancel Experience Edit"
-                  onClick={() => {
-                    setExpEditingId(null);
-                    setExpForm({ role: "", company: "", years: "" });
-                  }}
-                >
-                  <X size={16} />
-                </button>
-              )}
             </div>
           </div>
 
@@ -652,6 +661,25 @@ const apiFetch = async (path, opts = {}) => {
             />
           </div>
 
+          {/* Agmarknet info card */}
+          <div className={styles.agmarkCard}>
+            <div className={styles.cardTitle}>Mandi Price & Market Reports</div>
+            <p className={styles.agmarkDesc}>
+              Stay updated with daily Mandi prices, commodity-wise price trends,
+              arrivals, and market reports across India. Explore historical
+              trends, compare commodities, and access state/district-wise
+              dashboards to plan your sales and purchases better.
+            </p>
+            <a
+              href="https://agmarknet.gov.in/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.agmarkBtn}
+            >
+              Go to Agmarknet
+            </a>
+          </div>
+
           {/* Notifications panel */}
           <div className={styles.notificationsPanel}>
             <div
@@ -659,9 +687,9 @@ const apiFetch = async (path, opts = {}) => {
               style={{ position: "relative" }}
             >
               <Bell size={20} />
-              <span>Notifications</span>
+              <span className={styles.notifTitle}>Notifications</span>
               <button
-                className={styles.clearNotifBtn}
+                className={styles.clearNotifLink}
                 onClick={handleNotifClear}
                 disabled={notifications.length === 0}
                 aria-label="Clear Notifications"
@@ -713,18 +741,39 @@ const apiFetch = async (path, opts = {}) => {
                 <div style={{ color: "#b7e7d1" }}>No notifications.</div>
               ) : (
                 notifications.map((notif) => (
-                  <div className={styles.notificationItem} key={notif.id}>
-                    <div className={styles.notifDot}></div>
-                    <div>
+                  <div
+                    className={`${styles.notificationItem} ${
+                      notif.type?.toLowerCase().includes("sale")
+                        ? styles.notifSuccess
+                        : notif.type?.toLowerCase().includes("weather")
+                        ? styles.notifWarning
+                        : ""
+                    }`}
+                    key={notif.id}
+                  >
+                    <div className={styles.notifIconWrap}>
+                      {notif.type?.toLowerCase().includes("sale") ? (
+                        <CheckCircle size={18} />
+                      ) : notif.type?.toLowerCase().includes("weather") ? (
+                        <CloudRain size={18} />
+                      ) : (
+                        <Bell size={18} />
+                      )}
+                    </div>
+                    <div className={styles.notifTextBlock}>
                       <div className={styles.notifType}>{notif.type}</div>
                       <div className={styles.notifCaption}>{notif.caption}</div>
                     </div>
-                    <button
-                      aria-label="Delete Notification"
-                      onClick={() => handleNotifDelete(notif.id)}
-                    >
-                      <Trash2 size={14} />
-                    </button>
+                    <div className={styles.notifRightIcons}>
+                      <Lock size={14} />
+                      <button
+                        className={styles.notifDeleteBtn}
+                        aria-label="Delete Notification"
+                        onClick={() => handleNotifDelete(notif.id)}
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
                   </div>
                 ))
               )}
