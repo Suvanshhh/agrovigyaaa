@@ -399,6 +399,52 @@ app.post("/api/labour-estimate", (req, res) => {
 //   top_alternatives: [{crop, reason}],
 //   warnings: string[]
 // }
+// Simple heuristic fallback function (added because AI model may fail)
+function heuristicRecommendation(d) {
+  const N = Number(d.Nitrogen) || 0;
+  const P = Number(d.Phosphorus) || 0;
+  const K = Number(d.Potassium) || 0;
+  const T = Number(d.Temperature) || 0;
+  const H = Number(d.Humidity) || 0;
+  const ph = Number(d.pH) || Number(d.pH) || 0; // accept pH key
+  const R = Number(d.Rainfall) || 0;
+  let crop = "soybean";
+  let category = "Oilseed";
+  if (ph && ph < 5.5) {
+    crop = "tea";
+    category = "Cash Crop (Tea)";
+  } else if (R > 180 && T > 24) {
+    crop = "rice";
+    category = "Cereal";
+  } else if (T >= 18 && T <= 26 && H < 55) {
+    crop = "wheat";
+    category = "Cereal";
+  } else if (N < 40 && ph >= 6 && ph <= 7.5) {
+    crop = "chickpea";
+    category = "Pulse";
+  } else if (K > 100 && ph >= 6 && ph <= 7.5) {
+    crop = "tomato";
+    category = "Vegetable/Spice/Fruit";
+  }
+  const rationale = `Heuristic based on N:${N} P:${P} K:${K} T:${T}C H:${H}% pH:${ph} Rain:${R}mm`;
+  return {
+    crop,
+    category,
+    rationale,
+    fertilizer_advice: "Apply balanced NPK; adjust pH if needed",
+    top_alternatives: [
+      {
+        crop: crop === "rice" ? "maize" : "rice",
+        reason: "General adaptability",
+      },
+      {
+        crop: crop === "wheat" ? "chickpea" : "wheat",
+        reason: "Rotation / nutrient balance",
+      },
+    ],
+  };
+}
+
 app.post("/api/crop-recommendation", verifyFirebaseToken, async (req, res) => {
   const started = Date.now();
   function log(stage, extra = {}) {
