@@ -447,24 +447,20 @@ app.post("/api/crop-recommendation", verifyFirebaseToken, async (req, res) => {
       if (req.body?.[k] !== undefined && req.body?.[k] !== "") {
         if (!Number.isFinite(Number(req.body[k]))) {
           log("validation_fail", { field: k, value: req.body[k] });
-          return res
-            .status(400)
-            .json({
-              error: `Field ${k} must be numeric if provided`,
-              code: "VALIDATION_NUMERIC",
-            });
+          return res.status(400).json({
+            error: `Field ${k} must be numeric if provided`,
+            code: "VALIDATION_NUMERIC",
+          });
         }
       }
     }
 
     if (!GEMINI_API_KEY) {
       log("config_missing_key");
-      return res
-        .status(500)
-        .json({
-          error: "Server missing GEMINI_API_KEY",
-          code: "CONFIG_GEMINI_KEY",
-        });
+      return res.status(500).json({
+        error: "Server missing GEMINI_API_KEY",
+        code: "CONFIG_GEMINI_KEY",
+      });
     }
     const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
     const model = genAI.getGenerativeModel({ model: GEMINI_MODEL });
@@ -581,18 +577,51 @@ Return STRICT JSON with this schema and no extra text (no markdown, no comments)
       }
       if (!parsed || !parsed.crop) {
         log("parse_failure", { snippet: text.slice(0, 180) });
-        return res
-          .status(502)
-          .json({
-            error: "AI response could not be parsed",
-            code: "PARSE_ERROR",
-          });
+        // Heuristic fallback when parsing fails
+        const fallback = heuristicRecommendation({
+          Nitrogen,
+          Phosphorus,
+          Potassium,
+          Temperature,
+          Humidity,
+          pH,
+          Rainfall,
+        });
+        return res.status(200).json({
+          crop: fallback.crop,
+          category: fallback.category,
+          rationale: fallback.rationale + " (AI parse fallback)",
+          confidence: 0.35,
+          suitability_score: 35,
+          fertilizer_advice: fallback.fertilizer_advice,
+          top_alternatives: fallback.top_alternatives,
+          warnings: ["AI response parse failed; heuristic suggestion provided"],
+          model: "heuristic-parse-fallback",
+        });
       }
     } catch (modelErr) {
       log("model_fail", { message: modelErr.message });
-      return res
-        .status(502)
-        .json({ error: "Model generation failed", code: "MODEL_ERROR" });
+      const fallback = heuristicRecommendation({
+        Nitrogen,
+        Phosphorus,
+        Potassium,
+        Temperature,
+        Humidity,
+        pH,
+        Rainfall,
+      });
+      return res.status(200).json({
+        crop: fallback.crop,
+        category: fallback.category,
+        rationale: fallback.rationale + " (AI model fallback)",
+        confidence: 0.3,
+        suitability_score: 30,
+        fertilizer_advice: fallback.fertilizer_advice,
+        top_alternatives: fallback.top_alternatives,
+        warnings: ["Gemini model unavailable; heuristic suggestion provided"],
+        model: "heuristic-model-fallback",
+        error_code: "MODEL_ERROR",
+      });
     }
 
     // Normalize response fields
