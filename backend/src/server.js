@@ -14,49 +14,7 @@ const prisma = new PrismaClient();
 const app = express();
 const PORT = process.env.PORT || 4000;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-let GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-1.5-flash"; // default fallback
-// Candidate list ordered by preference; adjust names per current API availability.
-const GEMINI_MODEL_CANDIDATES = [
-  GEMINI_MODEL,
-  "gemini-1.5-flash-002",
-  "gemini-1.5-flash-latest",
-  "gemini-1.5-pro",
-  "gemini-pro", // older naming
-].filter((v, i, a) => v && a.indexOf(v) === i);
-
-let resolvedGeminiModel = null;
-async function probeGeminiModels() {
-  if (!GEMINI_API_KEY) return;
-  const { GoogleGenerativeAI } = await import("@google/generative-ai");
-  const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-  for (const m of GEMINI_MODEL_CANDIDATES) {
-    try {
-      const model = genAI.getGenerativeModel({ model: m });
-      // Tiny cheap probe
-      await model.generateContent({
-        contents: [
-          { role: "user", parts: [{ text: 'Return JSON {"ok":true}' }] },
-        ],
-        generationConfig: { responseMimeType: "application/json" },
-      });
-      resolvedGeminiModel = m;
-      console.log(`[Gemini] Selected model: ${m}`);
-      break;
-    } catch (e) {
-      console.warn(`[Gemini] Model probe failed for ${m}: ${e.message}`);
-    }
-  }
-  if (!resolvedGeminiModel) {
-    console.error(
-      `[Gemini] No candidate model succeeded. Using configured ${GEMINI_MODEL} (may still fail).`
-    );
-    resolvedGeminiModel = GEMINI_MODEL;
-  }
-}
-
-probeGeminiModels().catch((err) =>
-  console.error("Gemini probe init error", err)
-);
+const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-1.5-flash";
 
 // Define allowed origins. The frontend URL can be a comma-separated list.
 // const allowedOrigins = (process.env.FRONTEND_URL|| "http://localhost:3000" || "https://agrovigyaaa-2tok.vercel.app" || "https://agrovigyaaa-production.up.railway.app" || "http://localhost:3000")
@@ -330,9 +288,7 @@ app.patch("/api/profile/me/lists", verifyFirebaseToken, async (req, res) => {
 const server = app.listen(PORT, () => {
   console.log(`Backend listening on ${PORT}`);
   if (!GEMINI_API_KEY) {
-    console.warn(
-      "[WARN] GEMINI_API_KEY is not set. /api/crop-recommendation will return an error."
-    );
+    console.warn("[WARN] GEMINI_API_KEY is not set. /api/crop-recommendation will return an error.");
   }
 });
 
@@ -408,8 +364,7 @@ app.post("/api/labour-estimate", (req, res) => {
     // Adjusted labour per ha
     const labourPerHaAdjusted = record.labourPerHa * seasonFactor * eff;
     // Wage selection
-    const wage =
-      wage_type === "Expected" ? record.expectedWage : record.govtWage;
+    const wage = wage_type === "Expected" ? record.expectedWage : record.govtWage;
     const costPerHa = labourPerHaAdjusted * wage;
     const totalCost = costPerHa * numericArea;
     return res.json({
@@ -441,67 +396,7 @@ app.post("/api/labour-estimate", (req, res) => {
 //   top_alternatives: [{crop, reason}],
 //   warnings: string[]
 // }
-// Simple heuristic fallback function (added because AI model may fail)
-function heuristicRecommendation(d) {
-  const N = Number(d.Nitrogen) || 0;
-  const P = Number(d.Phosphorus) || 0;
-  const K = Number(d.Potassium) || 0;
-  const T = Number(d.Temperature) || 0;
-  const H = Number(d.Humidity) || 0;
-  const ph = Number(d.pH) || Number(d.pH) || 0; // accept pH key
-  const R = Number(d.Rainfall) || 0;
-  let crop = "soybean";
-  let category = "Oilseed";
-  if (ph && ph < 5.5) {
-    crop = "tea";
-    category = "Cash Crop (Tea)";
-  } else if (R > 180 && T > 24) {
-    crop = "rice";
-    category = "Cereal";
-  } else if (T >= 18 && T <= 26 && H < 55) {
-    crop = "wheat";
-    category = "Cereal";
-  } else if (N < 40 && ph >= 6 && ph <= 7.5) {
-    crop = "chickpea";
-    category = "Pulse";
-  } else if (K > 100 && ph >= 6 && ph <= 7.5) {
-    crop = "tomato";
-    category = "Vegetable/Spice/Fruit";
-  }
-  const rationale = `Heuristic based on N:${N} P:${P} K:${K} T:${T}C H:${H}% pH:${ph} Rain:${R}mm`;
-  return {
-    crop,
-    category,
-    rationale,
-    fertilizer_advice: "Apply balanced NPK; adjust pH if needed",
-    top_alternatives: [
-      {
-        crop: crop === "rice" ? "maize" : "rice",
-        reason: "General adaptability",
-      },
-      {
-        crop: crop === "wheat" ? "chickpea" : "wheat",
-        reason: "Rotation / nutrient balance",
-      },
-    ],
-  };
-}
-
 app.post("/api/crop-recommendation", verifyFirebaseToken, async (req, res) => {
-  const started = Date.now();
-  function log(stage, extra = {}) {
-    console.log(
-      JSON.stringify({
-        ts: new Date().toISOString(),
-        route: "crop-recommendation",
-        stage,
-        ms: Date.now() - started,
-        ...extra,
-      })
-    );
-  }
-
-  log("enter", { headers: Object.keys(req.headers) });
   try {
     const {
       Nitrogen,
@@ -513,12 +408,12 @@ app.post("/api/crop-recommendation", verifyFirebaseToken, async (req, res) => {
       Rainfall,
       state,
       district,
-      season, // e.g., Kharif | Rabi | Zaid (Summer)
-      irrigation, // None | Occasional | Regular
-      soil_type, // Sandy | Loam | Clay | Black (Regur) | Laterite
+      season,          // e.g., Kharif | Rabi | Zaid (Summer)
+      irrigation,      // None | Occasional | Regular
+      soil_type,       // Sandy | Loam | Clay | Black (Regur) | Laterite
       previous_crop,
-      rainfall_band, // Low | Normal | High
-      goal, // Cereal | Pulse | Oilseed | Cash | Horticulture | Fodder
+      rainfall_band,   // Low | Normal | High
+      goal,            // Cereal | Pulse | Oilseed | Cash | Horticulture | Fodder
     } = req.body || {};
 
     // Make numerics optional to support Basic mode. Validate only if provided.
@@ -534,74 +429,44 @@ app.post("/api/crop-recommendation", verifyFirebaseToken, async (req, res) => {
     for (const k of numericKeys) {
       if (req.body?.[k] !== undefined && req.body?.[k] !== "") {
         if (!Number.isFinite(Number(req.body[k]))) {
-          log("validation_fail", { field: k, value: req.body[k] });
-          return res.status(400).json({
-            error: `Field ${k} must be numeric if provided`,
-            code: "VALIDATION_NUMERIC",
-          });
+          return res.status(400).json({ error: `Field ${k} must be numeric if provided` });
         }
       }
     }
 
     if (!GEMINI_API_KEY) {
-      log("config_missing_key");
-      return res.status(500).json({
-        error: "Server missing GEMINI_API_KEY",
-        code: "CONFIG_GEMINI_KEY",
-      });
+      return res.status(500).json({ error: "Server missing GEMINI_API_KEY" });
     }
-    const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-    const activeModelName = resolvedGeminiModel || GEMINI_MODEL;
-    const model = genAI.getGenerativeModel({ model: activeModelName });
-    const reqLang = (req.headers["x-lang"] || "en").toString().slice(0, 5);
-    const language = ["en", "hi", "mr"].includes(reqLang) ? reqLang : "en";
-    log("after_validation", { language });
+  const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+  const model = genAI.getGenerativeModel({ model: GEMINI_MODEL });
+  const reqLang = (req.headers["x-lang"] || "en").toString().slice(0,5);
+  const language = ["en","hi","mr"].includes(reqLang) ? reqLang : "en";
 
     // Craft a compact, structured prompt that mimics the RF model behavior with agronomic priors.
-    const langLabel =
-      language === "hi" ? "Hindi" : language === "mr" ? "Marathi" : "English";
+  const langLabel = language === 'hi' ? 'Hindi' : (language === 'mr' ? 'Marathi' : 'English');
 
-    // Allowed crops by state and season (seed list for Maharashtra)
-    const allowedByState = {
-      Maharashtra: {
-        Kharif: ["rice", "soybean", "cotton", "maize", "pigeonpea"],
-        Rabi: ["wheat", "chickpea", "sorghum", "mustard"],
-        Zaid: ["watermelon", "muskmelon", "vegetables", "fodder"],
-        Horticulture: ["onion", "tomato", "pomegranate", "grape"],
-      },
-    };
-    const st = (state || "").trim();
-    const ssn = (season || "").trim();
-    const allowedCrops =
-      (allowedByState[st] && allowedByState[st][ssn]) || null;
+  // Allowed crops by state and season (seed list for Maharashtra)
+  const allowedByState = {
+    Maharashtra: {
+      Kharif: ["rice", "soybean", "cotton", "maize", "pigeonpea"],
+      Rabi: ["wheat", "chickpea", "sorghum", "mustard"],
+      Zaid: ["watermelon", "muskmelon", "vegetables", "fodder"],
+      Horticulture: ["onion", "tomato", "pomegranate", "grape"],
+    },
+  };
+  const st = (state || "").trim();
+  const ssn = (season || "").trim();
+  const allowedCrops = (allowedByState[st] && allowedByState[st][ssn]) || null;
 
-    const prompt = `You are an agricultural expert that recommends suitable crops based on soil macro-nutrients and local conditions. Respond strictly in ${langLabel}.
+  const prompt = `You are an agricultural expert that recommends suitable crops based on soil macro-nutrients and local conditions. Respond strictly in ${langLabel}.
 Given these inputs (units in parentheses):
-- Nitrogen (N, kg/ha): ${
-      Nitrogen !== undefined && Nitrogen !== "" ? Number(Nitrogen) : "unknown"
-    }
-- Phosphorus (P, kg/ha): ${
-      Phosphorus !== undefined && Phosphorus !== ""
-        ? Number(Phosphorus)
-        : "unknown"
-    }
-- Potassium (K, kg/ha): ${
-      Potassium !== undefined && Potassium !== ""
-        ? Number(Potassium)
-        : "unknown"
-    }
-- Temperature (°C): ${
-      Temperature !== undefined && Temperature !== ""
-        ? Number(Temperature)
-        : "unknown"
-    }
-- Humidity (%): ${
-      Humidity !== undefined && Humidity !== "" ? Number(Humidity) : "unknown"
-    }
+- Nitrogen (N, kg/ha): ${Nitrogen !== undefined && Nitrogen !== "" ? Number(Nitrogen) : "unknown"}
+- Phosphorus (P, kg/ha): ${Phosphorus !== undefined && Phosphorus !== "" ? Number(Phosphorus) : "unknown"}
+- Potassium (K, kg/ha): ${Potassium !== undefined && Potassium !== "" ? Number(Potassium) : "unknown"}
+- Temperature (°C): ${Temperature !== undefined && Temperature !== "" ? Number(Temperature) : "unknown"}
+- Humidity (%): ${Humidity !== undefined && Humidity !== "" ? Number(Humidity) : "unknown"}
 - Soil pH: ${pH !== undefined && pH !== "" ? Number(pH) : "unknown"}
-- Rainfall (mm): ${
-      Rainfall !== undefined && Rainfall !== "" ? Number(Rainfall) : "unknown"
-    }
+- Rainfall (mm): ${Rainfall !== undefined && Rainfall !== "" ? Number(Rainfall) : "unknown"}
 - Rainfall band: ${rainfall_band || "(not provided)"}
 
 Optional context (use if provided):
@@ -615,13 +480,7 @@ Optional context (use if provided):
 - Goal: ${goal || "(not provided)"}
 
 Mimic the behavior of a balanced RandomForestClassifier trained on grouped crop categories (Cereal, Pulse, Oilseed, Cash Crop (Cotton), Vegetable/Spice/Fruit), while also providing a single best specific crop example. The output JSON values (category names, rationale text, warnings, fertilizer_advice, alternatives.reason) must be written in ${langLabel}.
-If State and Season are provided, treat them as hard constraints. Recommend only crops commonly grown in that state and season. ${
-      allowedCrops
-        ? `For ${st} in ${ssn}, allowedCrops = ${JSON.stringify(
-            allowedCrops
-          )}. Choose from allowedCrops unless none fits; if none fits, explain and suggest the closest feasible option.`
-        : ``
-    }
+If State and Season are provided, treat them as hard constraints. Recommend only crops commonly grown in that state and season. ${allowedCrops ? `For ${st} in ${ssn}, allowedCrops = ${JSON.stringify(allowedCrops)}. Choose from allowedCrops unless none fits; if none fits, explain and suggest the closest feasible option.` : ``}
 Use irrigation and rainfall band to avoid water-heavy crops when irrigation=None or rainfall=Low. If soil type is Black (Regur), consider cotton, soybean, sorghum, and pulses as favorable options. If previous crop is provided, favor rotation (e.g., follow paddy with pulses) to break pest/disease cycles.
 If any numeric value is "unknown", infer conservatively from season/location and clearly reflect any uncertainty in confidence and warnings.
 Consider these heuristics similar to feature importance:
@@ -646,71 +505,26 @@ Return STRICT JSON with this schema and no extra text (no markdown, no comments)
   "fertilizer_advice": "string"       // one or two short lines (e.g., "Apply NPK 10-26-26; adjust pH with lime if <6.0")
 }`;
 
-    let text = "";
+    const generationConfig = { responseMimeType: "application/json" };
+    const result = await model.generateContent({
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+      generationConfig,
+    });
+    const response = await result.response;
+    const text = response.text();
+
+    // Attempt to parse JSON from the model's response
     let parsed;
     try {
-      const generationConfig = { responseMimeType: "application/json" };
-      log("gen_start", { promptChars: prompt.length, model: activeModelName });
-      const result = await model.generateContent({
-        contents: [{ role: "user", parts: [{ text: prompt }] }],
-        generationConfig,
-      });
-      const response = await result.response;
-      text = response.text();
-      log("gen_complete", { chars: text.length });
-      try {
-        parsed = JSON.parse(text.trim());
-      } catch (e) {
-        const match = text.match(/\{[\s\S]*\}/);
-        if (match) parsed = JSON.parse(match[0]);
-      }
-      if (!parsed || !parsed.crop) {
-        log("parse_failure", { snippet: text.slice(0, 180) });
-        // Heuristic fallback when parsing fails
-        const fallback = heuristicRecommendation({
-          Nitrogen,
-          Phosphorus,
-          Potassium,
-          Temperature,
-          Humidity,
-          pH,
-          Rainfall,
-        });
-        return res.status(200).json({
-          crop: fallback.crop,
-          category: fallback.category,
-          rationale: fallback.rationale + " (AI parse fallback)",
-          confidence: 0.35,
-          suitability_score: 35,
-          fertilizer_advice: fallback.fertilizer_advice,
-          top_alternatives: fallback.top_alternatives,
-          warnings: ["AI response parse failed; heuristic suggestion provided"],
-          model: "heuristic-parse-fallback",
-        });
-      }
-    } catch (modelErr) {
-      log("model_fail", { message: modelErr.message });
-      const fallback = heuristicRecommendation({
-        Nitrogen,
-        Phosphorus,
-        Potassium,
-        Temperature,
-        Humidity,
-        pH,
-        Rainfall,
-      });
-      return res.status(200).json({
-        crop: fallback.crop,
-        category: fallback.category,
-        rationale: fallback.rationale + " (AI model fallback)",
-        confidence: 0.3,
-        suitability_score: 30,
-        fertilizer_advice: fallback.fertilizer_advice,
-        top_alternatives: fallback.top_alternatives,
-        warnings: ["Gemini model unavailable; heuristic suggestion provided"],
-        model: "heuristic-model-fallback",
-        error_code: "MODEL_ERROR",
-      });
+      parsed = JSON.parse(text.trim());
+    } catch (e) {
+      // Fallback: extract JSON block
+  const match = text.match(/\{[\s\S]*\}/);
+      if (match) parsed = JSON.parse(match[0]);
+    }
+    if (!parsed || !parsed.crop) {
+      console.error("Gemini parse failure:", text);
+      return res.status(502).json({ error: "AI response could not be parsed" });
     }
 
     // Normalize response fields
@@ -719,30 +533,16 @@ Return STRICT JSON with this schema and no extra text (no markdown, no comments)
       category: parsed.category ? String(parsed.category) : undefined,
       rationale: parsed.rationale ? String(parsed.rationale) : undefined,
       confidence: Number(parsed.confidence ?? 0),
-      suitability_score: Number(
-        parsed.suitability_score ??
-          (parsed.confidence ? Number(parsed.confidence) * 100 : 0)
-      ),
-      fertilizer_advice: parsed.fertilizer_advice
-        ? String(parsed.fertilizer_advice)
-        : undefined,
+      suitability_score: Number(parsed.suitability_score ?? (parsed.confidence ? Number(parsed.confidence)*100 : 0)),
+      fertilizer_advice: parsed.fertilizer_advice ? String(parsed.fertilizer_advice) : undefined,
       top_alternatives: Array.isArray(parsed.top_alternatives)
         ? parsed.top_alternatives.slice(0, 3).map((x) => ({
             crop: String(x.crop || ""),
             reason: String(x.reason || ""),
           }))
         : [],
-      warnings: Array.isArray(parsed.warnings)
-        ? parsed.warnings.map(String)
-        : [],
-      inputs: {
-        Nitrogen,
-        Phosphorus,
-        Potassium,
-        Temperature,
-        Humidity,
-        pH,
-        Rainfall,
+      warnings: Array.isArray(parsed.warnings) ? parsed.warnings.map(String) : [],
+      inputs: { Nitrogen, Phosphorus, Potassium, Temperature, Humidity, pH, Rainfall,
         state: st || undefined,
         district: district || undefined,
         season: ssn || undefined,
@@ -750,19 +550,12 @@ Return STRICT JSON with this schema and no extra text (no markdown, no comments)
         soil_type: soil_type || undefined,
         previous_crop: previous_crop || undefined,
         rainfall_band: rainfall_band || undefined,
-        goal: goal || undefined,
-      },
+        goal: goal || undefined },
     };
 
-    log("success", {
-      crop: safe.crop,
-      category: safe.category,
-      msTotal: Date.now() - started,
-    });
-    res.json({ ...safe, model: activeModelName });
+    res.json(safe);
   } catch (e) {
-    log("unhandled_exception", { message: e.message });
     console.error("/api/crop-recommendation failed", e);
-    res.status(500).json({ error: "Internal server error", code: "UNHANDLED" });
+    res.status(500).json({ error: "Internal server error" });
   }
 });
