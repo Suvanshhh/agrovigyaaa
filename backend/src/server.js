@@ -14,7 +14,49 @@ const prisma = new PrismaClient();
 const app = express();
 const PORT = process.env.PORT || 4000;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-1.5-flash";
+let GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-1.5-flash"; // default fallback
+// Candidate list ordered by preference; adjust names per current API availability.
+const GEMINI_MODEL_CANDIDATES = [
+  GEMINI_MODEL,
+  "gemini-1.5-flash-002",
+  "gemini-1.5-flash-latest",
+  "gemini-1.5-pro",
+  "gemini-pro", // older naming
+].filter((v, i, a) => v && a.indexOf(v) === i);
+
+let resolvedGeminiModel = null;
+async function probeGeminiModels() {
+  if (!GEMINI_API_KEY) return;
+  const { GoogleGenerativeAI } = await import("@google/generative-ai");
+  const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+  for (const m of GEMINI_MODEL_CANDIDATES) {
+    try {
+      const model = genAI.getGenerativeModel({ model: m });
+      // Tiny cheap probe
+      await model.generateContent({
+        contents: [
+          { role: "user", parts: [{ text: 'Return JSON {"ok":true}' }] },
+        ],
+        generationConfig: { responseMimeType: "application/json" },
+      });
+      resolvedGeminiModel = m;
+      console.log(`[Gemini] Selected model: ${m}`);
+      break;
+    } catch (e) {
+      console.warn(`[Gemini] Model probe failed for ${m}: ${e.message}`);
+    }
+  }
+  if (!resolvedGeminiModel) {
+    console.error(
+      `[Gemini] No candidate model succeeded. Using configured ${GEMINI_MODEL} (may still fail).`
+    );
+    resolvedGeminiModel = GEMINI_MODEL;
+  }
+}
+
+probeGeminiModels().catch((err) =>
+  console.error("Gemini probe init error", err)
+);
 
 // Define allowed origins. The frontend URL can be a comma-separated list.
 // const allowedOrigins = (process.env.FRONTEND_URL|| "http://localhost:3000" || "https://agrovigyaaa-2tok.vercel.app" || "https://agrovigyaaa-production.up.railway.app" || "http://localhost:3000")
@@ -509,7 +551,8 @@ app.post("/api/crop-recommendation", verifyFirebaseToken, async (req, res) => {
       });
     }
     const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: GEMINI_MODEL });
+    const activeModelName = resolvedGeminiModel || GEMINI_MODEL;
+    const model = genAI.getGenerativeModel({ model: activeModelName });
     const reqLang = (req.headers["x-lang"] || "en").toString().slice(0, 5);
     const language = ["en", "hi", "mr"].includes(reqLang) ? reqLang : "en";
     log("after_validation", { language });
@@ -607,7 +650,7 @@ Return STRICT JSON with this schema and no extra text (no markdown, no comments)
     let parsed;
     try {
       const generationConfig = { responseMimeType: "application/json" };
-      log("gen_start", { promptChars: prompt.length });
+      log("gen_start", { promptChars: prompt.length, model: activeModelName });
       const result = await model.generateContent({
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         generationConfig,
@@ -716,7 +759,7 @@ Return STRICT JSON with this schema and no extra text (no markdown, no comments)
       category: safe.category,
       msTotal: Date.now() - started,
     });
-    res.json(safe);
+    res.json({ ...safe, model: activeModelName });
   } catch (e) {
     log("unhandled_exception", { message: e.message });
     console.error("/api/crop-recommendation failed", e);
