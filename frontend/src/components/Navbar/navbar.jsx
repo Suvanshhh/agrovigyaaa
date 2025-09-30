@@ -56,6 +56,7 @@ const Navbar = () => {
 
 
     { name: t("services.governmentSchemes"), path: "/govt-schemes" },
+    { name: t("services.governmentInitiatives"), path: "/government-initiatives" },
     { name: t("services.marketplace"), path: "/marketplace" },
   ];
 

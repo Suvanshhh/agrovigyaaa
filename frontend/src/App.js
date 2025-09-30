@@ -14,6 +14,7 @@ import AuthModal from "./components/Auth/AuthModal/AuthModal";
 import { useAuth } from "./context/AuthContext";
 
 import GovtSchemes from "./Pages/GovtSchemes/GovtSchemes";
+import GovtInitiativesPage from "./Pages/GovtInitiativesPage/GovtInitiativesPage";
 import Marketplace from "./Pages/Marketplace/Marketplace";
 import ScrollToTop from "./components/utils/ScrollToTop";
 // Import member components
@@ -99,6 +100,7 @@ function App() {
            
             <Route path="/marketplace" element={<Marketplace />} />
             <Route path="/govt-schemes" element={<GovtSchemes />} />
+            <Route path="/government-initiatives" element={<GovtInitiativesPage />} />
 
 
             {/* Member routes */}
