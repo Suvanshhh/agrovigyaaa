@@ -19,9 +19,9 @@ const Footer = () => {
           />
           <p className={styles.companyDesc}>{t("footer.companyDesc")}</p>
           <div className={styles.socialLinks}>
-            <a href="#" className={styles.socialIcon}><Linkedin size={18} /></a>
-            <a href="#" className={styles.socialIcon}><X size={18} /></a>
-            <a href="#" className={styles.socialIcon}><Instagram size={18} /></a>
+            <a href="#" className={styles.socialIcon}><Linkedin size={24} /></a>
+            <a href="#" className={styles.socialIcon}><X size={24} /></a>
+            <a href="#" className={styles.socialIcon}><Instagram size={24} /></a>
           </div>
         </div>
 
