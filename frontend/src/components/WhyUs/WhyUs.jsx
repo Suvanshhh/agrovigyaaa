@@ -7,30 +7,40 @@ const WhyChooseUs = () => {
 
   return (
     <section className={styles.whyChooseUs}>
-      <div className={styles.topRow}>
-        <div className={styles.imageCard}>
+      <h2 className={styles.heading}>{t("whyChooseUs.whyagrovigya")}</h2>
+      <div className={styles.cardContainer}>
+        <div className={styles.card}>
           <img
             src="https://i.postimg.cc/FHm86dx1/picc.jpg"
             alt="Smart Farming"
             className={styles.cardImage}
           />
-          <div className={styles.imageOverlay}>
-            <div className={styles.overlayTitle}>{t("whyChooseUs.smartFarming")}</div>
-            <div className={styles.overlayDesc}>{t("whyChooseUs.smartFarmingDesc")}</div>
+          <div className={styles.cardContent}>
+            <div className={styles.cardTitle}>{t("whyChooseUs.smartFarming")}</div>
+            <div className={styles.cardDesc}>{t("whyChooseUs.smartFarmingDesc")}</div>
           </div>
         </div>
-        <div className={styles.topText}>
-          <h2>{t("whyChooseUs.whyagrovigya")}</h2>
+        <div className={styles.card}>
+          <img
+            src="https://i.pinimg.com/1200x/ef/d6/b9/efd6b9ba12e896a351c4a21c9893e382.jpg"
+            alt="Financial Assistance"
+            className={styles.cardImage}
+          />
+          <div className={styles.cardContent}>
+            <div className={styles.cardTitle}>{t("whyChooseUs.financialAssistance")}</div>
+            <div className={styles.cardDesc}>{t("whyChooseUs.financialAssistanceDesc")}</div>
+          </div>
         </div>
-      </div>
-      <div className={styles.bottomRow}>
-        <div className={styles.infoCard}>
-          <div className={styles.infoTitle}>{t("whyChooseUs.financialAssistance")}</div>
-          <div className={styles.infoDesc}>{t("whyChooseUs.financialAssistanceDesc")}</div>
-        </div>
-        <div className={styles.infoCard}>
-          <div className={styles.infoTitle}>{t("whyChooseUs.sustainableAgriculture")}</div>
-          <div className={styles.infoDesc}>{t("whyChooseUs.sustainableAgricultureDesc")}</div>
+        <div className={styles.card}>
+          <img
+            src="https://i.pinimg.com/1200x/d9/b0/83/d9b0838c0ac6114b77f10401127f8c72.jpg"
+            alt="Sustainable Agriculture"
+            className={styles.cardImage}
+          />
+          <div className={styles.cardContent}>
+            <div className={styles.cardTitle}>{t("whyChooseUs.sustainableAgriculture")}</div>
+            <div className={styles.cardDesc}>{t("whyChooseUs.sustainableAgricultureDesc")}</div>
+          </div>
         </div>
       </div>
     </section>

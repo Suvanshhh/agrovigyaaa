@@ -13,6 +13,9 @@ const componentMap = {
   siya: lazy(() => import("../AboutEveryone/Siya/Siya")),
   sunita: lazy(() => import("../AboutEveryone/Sunita/Sunita")),
   suvansh: lazy(() => import("../AboutEveryone/Suvansh/Suvansh")),
+  koena: lazy(() => import("../AboutEveryone/Koena/Koena")),
+  gargi: lazy(() => import("../AboutEveryone/Gargi/Gargi")),
+  urukriti: lazy(() => import("../AboutEveryone/Urukriti/Urukriti")),
 };
 
 const DynamicProfile = () => {

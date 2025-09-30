@@ -95,6 +95,18 @@ i18n
               name: "Isha Deolakar",
               role: "UI/UX & Graphic Designer",
             },
+            koena : {
+              name : "Koena Ganguly",
+              role : "Researcher"
+            },
+            gargi : {
+              name : "Gargi Senad",
+              role : "Researcher"
+            },
+            urukriti : {
+              name : "Urukriti Gupta",
+              role : "Researcher"
+            }
           },
           ourVision: "Our Vision",
           visionContent: "Our vision is to transform the industry...",
@@ -127,6 +139,7 @@ i18n
             subtitle:
               "Get the best crop suggestions based on soil and weather conditions.",
             imageAlt: "Crop recommendation illustration",
+            helpButton: "Confused about how to test your soil?",
           },
           crop_recom: {
             form: {
@@ -542,7 +555,7 @@ i18n
               role: "डेवलपर",
             },
             ishaDeolakar: {
-              name: "ईशा देओलकर",
+              name: "ईशा देवळेकर",
               role: "UI/UX और ग्राफिक डिज़ाइनर",
             },
           },
@@ -572,6 +585,7 @@ i18n
             subtitle:
               "मिट्टी और मौसम की स्थिति के आधार पर सर्वोत्तम फसल सुझाव प्राप्त करें।",
             imageAlt: "फसल सिफारिश चित्रण",
+            helpButton: "अपनी मिट्टी का परीक्षण कैसे करें? उलझन में हैं?",
           },
           crop_recom: {
             form: {
@@ -989,7 +1003,7 @@ i18n
               role: "डेवलपर",
             },
             ishaDeolakar: {
-              name: "ईशा देओलकर",
+              name: "ईशा देवळेकर",
               role: "UI/UX और ग्राफिक डिज़ाइनर",
             },
           },
@@ -1019,6 +1033,7 @@ i18n
             subtitle:
               "माती आणि हवामानाच्या स्थितीवर आधारित सर्वोत्तम पीक शिफारसी मिळवा.",
             imageAlt: "पीक शिफारस चित्रण",
+            helpButton: "आपल्या मातीची चाचणी कशी करावी? गोंधळात आहात?",
           },
           crop_recom: {
             form: {

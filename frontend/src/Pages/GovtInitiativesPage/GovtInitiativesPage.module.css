@@ -1,0 +1,58 @@
+.initiativesSection {
+    margin: 0 auto;
+    max-width: 1200px;
+    background: #f7fdf9; /* Lighter background */
+    border-radius: 16px;
+    padding: 48px 32px 64px 32px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+}
+
+.heading {
+  text-align: center;
+  font-size: 2.8rem;
+  color: #1B3738; /* Darker text */
+  margin-bottom: 48px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 32px;
+}
+
+.initiativeCard {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: box-shadow 0.3s, transform 0.3s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    color: #1B3738;
+}
+
+.initiativeCard:hover, .initiativeCard:focus {
+  box-shadow: 0 8px 24px rgba(27, 55, 56, 0.15);
+  transform: translateY(-5px);
+  color: #1B3738;
+}
+
+.iconWrapper {
+    margin-bottom: 24px;
+    color: #90E668;
+}
+
+.initiativeName {
+  font-weight: 500;
+  text-align: center;
+  letter-spacing: 0.01em;
+  font-size: 1.1rem;
+  line-height: 1.5;
+}

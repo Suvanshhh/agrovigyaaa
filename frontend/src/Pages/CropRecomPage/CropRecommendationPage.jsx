@@ -27,7 +27,7 @@ const CropRecommendationPage = () => {
             alt="Confused character"
             className={styles.animatedIcon}
           />
-         {t("labour.helpButton")}
+         {t("crop.helpButton")}
         </button>
         <FarmerGuidePopup show={showGuide} onClose={() => setShowGuide(false)} />
         <div className={styles.contentContainerColumn}>

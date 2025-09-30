@@ -1,14 +1,14 @@
 .footer {
   background: #1B3738;
   color: #EFEFEF;
-  padding: 2.5rem 2rem 1rem 2rem;
+  padding: 3rem 2rem 1rem 2rem;
 }
 
 .footerContent {
   max-width: 1300px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 2.2fr 1.2fr 1.2fr 1.5fr;
+  grid-template-columns: 2.2fr 1.5fr 1.5fr 1.5fr;
   gap: 2.5rem;
   align-items: flex-start;
 }
@@ -16,33 +16,33 @@
 .companySection {
   display: flex;
   flex-direction: column;
-  gap: 1.1rem;
+  gap: 1.5rem;
 }
 
 .footerLogo {
-  width: 100px;
-  height: 100px;
+  width: 300px;
+  height: 300px;
   object-fit: contain;
   /* margin-bottom: 0.5rem; */
 }
 
 .companyDesc {
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: #C8CACA;
   margin-bottom: 0.8rem;
-  max-width: 260px;
+  max-width: 300px;
 }
 
 .socialLinks {
   display: flex;
-  gap: 1.2rem;
+  gap: 1.5rem;
   margin-top: 0.5rem;
 }
 
 .socialIcon {
   color: #EFEFEF;
   transition: color 0.2s;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
 }
 .socialIcon:hover {
   color: #90E668;
@@ -56,10 +56,10 @@
 }
 
 .linksTitle {
-  font-size: 1.05rem;
+  font-size: 1.25rem;
   font-weight: 600;
   color: #EFEFEF;
-  margin-bottom: 1.1rem;
+  margin-bottom: 1.5rem;
   letter-spacing: 0.01em;
 }
 
@@ -69,16 +69,16 @@
   padding: 0;
   margin: 0;
   color: #C8CACA;
-  font-size: 0.98rem;
+  font-size: 1.05rem;
   display: flex;
   flex-direction: column;
-  gap: 0.7rem;
+  gap: 1rem;
 }
 
 .linksList a,
 .contactList a {
   color: #C8CACA;
-  text-decoration: none;
+  text-decoration: underline;
   transition: color 0.18s;
 }
 
@@ -90,7 +90,7 @@
 .divider {
   border: none;
   border-top: 1px solid #355c56;
-  margin: 2.2rem 0 1.2rem 0;
+  margin: 2.5rem 0 1.5rem 0;
   width: 100%;
 }
 
@@ -101,14 +101,14 @@
   justify-content: space-between;
   align-items: center;
   color: #C8CACA;
-  font-size: 0.96rem;
+  font-size: 1.05rem;
   padding: 0.2rem 0;
 }
 
 .privacyLink {
   color: #C8CACA;
-  text-decoration: none;
-  font-size: 0.97rem;
+  text-decoration: underline;
+  font-size: 1.05rem;
   transition: color 0.18s;
 }
 .privacyLink:hover {
@@ -118,18 +118,18 @@
 @media (max-width: 900px) {
   .footerContent {
     grid-template-columns: 1fr 1fr;
-    gap: 2rem;
+    gap: 2.5rem;
   }
   .bottomBar {
     flex-direction: column;
-    gap: 0.7rem;
+    gap: 1rem;
     text-align: center;
   }
 }
 @media (max-width: 600px) {
   .footerContent {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 2rem;
   }
   .footer {
     padding: 2rem 1rem 1rem 1rem;
