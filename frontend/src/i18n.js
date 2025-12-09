@@ -49,51 +49,53 @@ i18n
           },
 
           mentor: {
-            ashokpalande: {
+            ashok: {
               name: "Adv. Ashok Palande",
               role: "Vice Chairman, GB and Council, DES Chairman, CDC, DES SNFLC",
             },
-            sunitaadhav: {
+            sunita: {
               name: "Dr. Sunita Adhav",
               role: "Principal, DES SNFLC",
             },
-            anujasharma: {
-              name: "Anuja Sharma",
-              role: "Chair Advisory Council",
-            },
-            aishwaryayadav: {
-              name: "Dr. Aishwarya Yadav",
-              role: "Chair Executive Council",
-            },
-            anandkatikar: {
+            anand: {
               name: "Dr. Anand Katikar",
               role: "Secretary, Deccan Education Society, Pune and Member, Governing Body",
             },
-            pramodrawat: {
+            pramod: {
               name: "Shri Pramod Rawat",
               role: "DES Chairman, Council & Governing Body",
             },
           },
+          honourableChairProfiles: {
+            anuja: {
+              name: "Anuja Sharma",
+              role: "Chair Advisory Council",
+            },
+            aishwarya: {
+              name: "Dr. Aishwarya Yadav",
+              role: "Chair Executive Council",
+            },
+          },
 
           team: {
-            shubhraTripathi: {
+            shubhra: {
               name: "Shubhra Tripathi",
               role: "Founder and Director",
             },
 
-            siyaNimkar: {
+            siya: {
               name: "Siya Nimkar",
               role: "Researcher",
             },
-            shrutiKolhe: {
+            shrut: {
               name: "Shrut Kolhe",
               role: "Researcher",
             },
-            suvanshChoudhary: {
+            suvansh: {
               name: "Suvansh Choudhary",
               role: "Developer",
             },
-            agnivaMaiti: {
+            agniva: {
               name: "Agniva Maiti",
               role: "Developer",
             },
@@ -101,7 +103,7 @@ i18n
               name: "Shivam",
               role: "Developer",
             },
-            ishaDeolakar: {
+            isha: {
               name: "Isha Deolakar",
               role: "UI/UX & Graphic Designer",
             },
@@ -120,7 +122,8 @@ i18n
           },
           ourVision: "Our Vision",
           visionContent: "Our vision is to transform the industry...",
-          ourMentors: "Our Mentors",
+          ourMentors: "Honourable Mentors",
+          honourableChair: "Honourable Chair",
           ourFounder: "Our Founder",
           ourTeam: "Our Team",
           services: {
@@ -200,9 +203,11 @@ i18n
 
           labour: {
             title: "Labour Cost Estimation",
-            subtitle: "Estimate the labour cost for your crop and area easily.",
+            subtitle:
+              "Estimate the labour cost for your crop and area easily.",
             imageAlt: "Labour estimation illustration",
-            helpButton: "Confused about how to estimate your labour cost?",
+            helpButton:
+              "Confused about how to estimate your labour cost?",
             cropName: "Crop Name",
             selectCrop: "Select Crop",
             crops: {
@@ -236,7 +241,8 @@ i18n
             costPerHectare: "Cost per Hectare",
             totalCost: "Total Cost",
             na: "N/A",
-            errorFetch: "Failed to get estimation. Please try again.",
+            errorFetch:
+              "Failed to get estimation. Please try again.",
             errorGeneric: "Something went wrong.",
           },
 
@@ -446,7 +452,8 @@ i18n
             illustrationAlt: "Farmers Illustration",
             fillAllFields: "Please fill in all fields",
             passwordMismatch: "Passwords do not match",
-            mustAgree: "You must agree to the Terms of Use and Privacy Policy",
+            mustAgree:
+              "You must agree to the Terms of Use and Privacy Policy",
             signupFailed: "Signup failed",
             googleSignupFailed: "Google signup failed",
           },
@@ -520,54 +527,57 @@ i18n
           },
           ourVision: "हमारा दृष्टिकोण",
           visionContent: "हमारा दृष्टिकोण उद्योग को बदलने का है...",
-          ourMentors: "हमारे मार्गदर्शक",
+          ourMentors: "हमारे माननीय मार्गदर्शक",
+          honourableChair: "माननीय अध्यक्ष",
           ourFounder: "हमारे संस्थापक",
           ourTeam: "हमारी टीम",
           mentor: {
-            ashokpalande: {
+            ashok: {
               name: "अधिवक्ता अशोक पालांडे",
               role: "उपाध्यक्ष, जीबी और काउंसिल, डीईएस अध्यक्ष, सीडीसी, डीईएस एसएनएफएलसी",
             },
-            sunitaadhav: {
+            sunita: {
               name: "डॉ. सुनीता आदव",
               role: "प्रधानाचार्य, डीईएस एसएनएफएलसी",
             },
-            anujasharma: {
-              name: "अनुजा शर्मा",
-              role: "अध्यक्ष सलाहकार परिषद",
-            },
-            aishwaryayadav: {
-              name: "डॉ. ऐश्वर्या यादव",
-              role: "अध्यक्ष कार्यकारी परिषद",
-            },
-            anandkatikar: {
+            anand: {
               name: "Dr. Anand Katikar",
               role: "Secretary, Deccan Education Society, Pune and Member, Governing Body",
             },
-            pramodrawat: {
+            pramod: {
               name: "Shri Pramod Rawat",
               role: "DES Chairman, Council & Governing Body",
             },
           },
+          honourableChairProfiles: {
+            anuja: {
+              name: "अनुजा शर्मा",
+              role: "अध्यक्ष सलाहकार परिषद",
+            },
+            aishwarya: {
+              name: "डॉ. ऐश्वर्या यादव",
+              role: "अध्यक्ष कार्यकारी परिषद",
+            },
+          },
 
           team: {
-            shubhraTripathi: {
+            shubhra: {
               name: "शुभ्रा त्रिपाठी",
               role: "संस्थापक और निदेशक",
             },
-            siyaNimkar: {
+            siya: {
               name: "सिया निमकर",
               role: "अनुसंधानकर्ता",
             },
-            shrutiKolhe: {
+            shrut: {
               name: "श्रुति कोल्हे",
               role: "अनुसंधानकर्ता",
             },
-            suvanshChoudhary: {
+            suvansh: {
               name: "सुवंश चौधरी",
               role: "डेवलपर",
             },
-            agnivaMaiti: {
+            agniva: {
               name: "अग्निवा मइती",
               role: "डेवलपर",
             },
@@ -575,7 +585,7 @@ i18n
               name: "शिवम",
               role: "डेवलपर",
             },
-            ishaDeolakar: {
+            isha: {
               name: "ईशा देवळेकर",
               role: "UI/UX और ग्राफिक डिज़ाइनर",
             },
@@ -694,7 +704,8 @@ i18n
             costPerHectare: "प्रति हेक्टेयर लागत",
             totalCost: "कुल लागत",
             na: "उपलब्ध नहीं",
-            errorFetch: "अनुमान प्राप्त करने में विफल। कृपया पुनः प्रयास करें।",
+            errorFetch:
+              "अनुमान प्राप्त करने में विफल। कृपया पुनः प्रयास करें।",
             errorGeneric: "कुछ गलत हो गया।",
           },
 
@@ -790,7 +801,8 @@ i18n
             medium_income: "मध्यम आय",
             high_income: "उच्च आय",
             loading: "योजनाएँ लोड हो रही हैं...",
-            no_results: "आपके मापदंडों से मेल खाने वाली कोई योजना नहीं मिली।",
+            no_results:
+              "आपके मापदंडों से मेल खाने वाली कोई योजना नहीं मिली।",
             clear_filters: "फ़िल्टर साफ़ करें",
             retry: "पुनः प्रयास करें",
             ministry: "मंत्रालय",
@@ -977,54 +989,57 @@ i18n
           },
           ourVision: "आमचे दृष्टिकोन",
           visionContent: "आमचे दृष्टिकोन उद्योग बदलण्याचे आहे...",
-          ourMentors: "आमचे मार्गदर्शक",
+          ourMentors: "आमचे माननीय मार्गदर्शक",
+          honourableChair: "माननीय अध्यक्ष",
           ourFounder: "आमचे संस्थापक",
           ourTeam: "आमची टीम",
           mentor: {
-            ashokpalande: {
+            ashok: {
               name: "अ‍ॅड. अशोक पालांडे",
               role: "उपाध्यक्ष, जीबी आणि काऊन्सिल, डीईएस अध्यक्ष, सीडीसी, डीईएस एसएनएफएलसी",
             },
-            sunitaadhav: {
+            sunita: {
               name: "डॉ. सुनीता आदव",
               role: "प्राचार्य, डीईएस एसएनएफएलसी",
             },
-            anujasharma: {
-              name: "अनुजा शर्मा",
-              role: "अध्यक्ष सल्लागार परिषद",
-            },
-            aishwaryayadav: {
-              name: "डॉ. ऐश्वर्या यादव",
-              role: "अध्यक्ष कार्यकारी परिषद",
-            },
-            anandkatikar: {
+            anand: {
               name: "Dr. Anand Katikar",
               role: "Secretary, Deccan Education Society, Pune and Member, Governing Body",
             },
-            pramodrawat: {
+            pramod: {
               name: "Shri Pramod Rawat",
               role: "DES Chairman, Council & Governing Body",
             },
           },
+          honourableChairProfiles: {
+            anuja: {
+              name: "अनुजा शर्मा",
+              role: "अध्यक्ष सल्लागार परिषद",
+            },
+            aishwarya: {
+              name: "डॉ. ऐश्वर्या यादव",
+              role: "अध्यक्ष कार्यकारी परिषद",
+            },
+          },
 
           team: {
-            shubhraTripathi: {
+            shubhra: {
               name: "शुभ्रा त्रिपाठी",
               role: "संस्थापक आणि संचालक",
             },
-            siyaNimkar: {
+            siya: {
               name: "सिया निमकर",
               role: "अनुसंधानकर्ता",
             },
-            shrutiKolhe: {
+            shrut: {
               name: "श्रुति कोल्हे",
               role: "अनुसंधानकर्ता",
             },
-            suvanshChoudhary: {
+            suvansh: {
               name: "सुवंश चौधरी",
               role: "डेवलपर",
             },
-            agnivaMaiti: {
+            agniva: {
               name: "अग्निवा मइती",
               role: "डेवलपर",
             },
@@ -1032,7 +1047,7 @@ i18n
               name: "शिवम",
               role: "डेवलपर",
             },
-            ishaDeolakar: {
+            isha: {
               name: "ईशा देवळेकर",
               role: "UI/UX और ग्राफिक डिज़ाइनर",
             },
@@ -1150,7 +1165,8 @@ i18n
             costPerHectare: "प्रति हेक्टेअर खर्च",
             totalCost: "एकूण खर्च",
             na: "उपलब्ध नाही",
-            errorFetch: "अंदाज मिळवण्यात अयशस्वी. कृपया पुन्हा प्रयत्न करा.",
+            errorFetch:
+              "अंदाज मिळवण्यात अयशस्वी. कृपया पुन्हा प्रयत्न करा.",
             errorGeneric: "काहीतरी चूक झाली.",
           },
 
@@ -1226,7 +1242,8 @@ i18n
           },
           schemes: {
             title: "शासकीय योजना",
-            explore: "शेतकरी आणि ग्रामीण विकासासाठी विविध शासकीय योजना शोधा",
+            explore:
+              "शेतकरी आणि ग्रामीण विकासासाठी विविध शासकीय योजना शोधा",
             search_placeholder: "योजनांसाठी शोधा...",
             type: "योजना प्रकार",
             all_types: "सर्व प्रकार",
@@ -1247,7 +1264,8 @@ i18n
             medium_income: "मध्यम उत्पन्न",
             high_income: "जास्त उत्पन्न",
             loading: "योजना लोड होत आहेत...",
-            no_results: "आपल्या निकषांशी जुळणारी कोणतीही योजना सापडली नाही.",
+            no_results:
+              "आपल्या निकषांशी जुळणारी कोणतीही योजना सापडली नाही.",
             clear_filters: "फिल्टर साफ करा",
             retry: "पुन्हा प्रयत्न करा",
             ministry: "मंत्रालय",
@@ -1314,19 +1332,23 @@ i18n
             sectionTitle: "आमचे ब्लॉग वाचा",
             readMore: "अधिक वाचा",
             blog1: {
-              title: "कृषीचा भविष्य: कसा तंत्रज्ञान शेतीला क्रांतिकारी बनवतोय",
+              title:
+                "कृषीचा भविष्य: कसा तंत्रज्ञान शेतीला क्रांतिकारी बनवतोय",
               desc: "कृषी पारंपारिक पद्धतींना मागे टाकून एक उच्च-तंत्रज्ञान उद्योग बनली आहे, जी विज्ञान, नवकल्पना आणि शाश्वततेला एकत्र करते. जसे की जागतिक लोकसंख्या...",
             },
             blog2: {
-              title: "कृषीचा भविष्य: कसा तंत्रज्ञान शेतीला क्रांतिकारी बनवतोय",
+              title:
+                "कृषीचा भविष्य: कसा तंत्रज्ञान शेतीला क्रांतिकारी बनवतोय",
               desc: "कृषी पारंपारिक पद्धतींना मागे टाकून एक उच्च-तंत्रज्ञान उद्योग बनली आहे, जी विज्ञान, नवकल्पना आणि शाश्वततेला एकत्र करते. जसे की जागतिक लोकसंख्या...",
             },
             blog3: {
-              title: "कृषीचा भविष्य: कसा तंत्रज्ञान शेतीला क्रांतिकारी बनवतोय",
+              title:
+                "कृषीचा भविष्य: कसा तंत्रज्ञान शेतीला क्रांतिकारी बनवतोय",
               desc: "कृषी पारंपारिक पद्धतींना मागे टाकून एक उच्च-तंत्रज्ञान उद्योग बनली आहे, जी विज्ञान, नवकल्पना आणि शाश्वततेला एकत्र करते. जसे की जागतिक लोकसंख्या...",
             },
             blog4: {
-              title: "कृषीचा भविष्य: कसा तंत्रज्ञान शेतीला क्रांतिकारी बनवतोय",
+              title:
+                "कृषीचा भविष्य: कसा तंत्रज्ञान शेतीला क्रांतिकारी बनवतोय",
               desc: "कृषी पारंपारिक पद्धतींना मागे टाकून एक उच्च-तंत्रज्ञान उद्योग बनली आहे, जी विज्ञान, नवकल्पना आणि शाश्वततेला एकत्र करते. जसे की जागतिक लोकसंख्या...",
             },
           },

@@ -13,7 +13,7 @@ const Shivam = () => {
           <div className={styles.profileCard}>
             <div className={styles.profileImageWrapper}>
               <img
-                src="https://i.postimg.cc/fLkx8mPW/shivam-pic.jpg"
+                src="https://i.postimg.cc/DZFw6Kcw/shivam.jpg"
                 alt="Shivam"
                 className={styles.profileImage}
               />

@@ -7,19 +7,19 @@ import { useTranslation } from "react-i18next";
 
 const teamMembers = [
   {
-    key: "siyaNimkar",
+    key: "siya",
     img: "https://i.postimg.cc/PJ2jfK0m/siya-pic.jpg",
   },
   {
-    key: "shrutiKolhe",
+    key: "shrut",
     img: "https://i.postimg.cc/KjPjcWMq/shrut-pic2-removebg-preview.png",
   },
   {
-    key: "suvanshChoudhary",
+    key: "suvansh",
     img: "https://i.ibb.co/PzCw2K7S/1000158921-01.jpg",
   },
   {
-    key: "agnivaMaiti",
+    key: "agniva",
     img: "https://i.postimg.cc/hgzHNdVc/agniva-pic.jpg",
   },
   {
@@ -27,7 +27,7 @@ const teamMembers = [
     img: "https://i.postimg.cc/DZFw6Kcw/shivam.jpg",
   },
   {
-    key: "ishaDeolakar",
+    key: "isha",
     img: "https://i.postimg.cc/NfMkPDmL/ISHa.jpg",
   },
   {
@@ -45,34 +45,37 @@ const teamMembers = [
 ];
 
 const projectDirector = {
-  key: "shubhraTripathi",
+  key: "shubhra",
   role: "Founder and Director",
   img: "https://i.postimg.cc/65pKbJGz/shubhra-pic.jpg",
 };
 
 const mentors = [
   {
-    key: "pramodrawat",
+    key: "pramod",
     img: "https://i.postimg.cc/DzDx2Q5s/Shri_pramod_rawat.jpg",
   },
   {
-    key: "ashokpalande",
+    key: "ashok",
     img: "https://i.ibb.co/PvGB5gpM/Ashok-palande-pic.jpg",
   },
   {
-    key: "anandkatikar",
+    key: "anand",
     img: "https://i.postimg.cc/nLMdbSK0/Dr_Anand_Katikar.jpg",
   },
   {
-    key: "sunitaadhav",
+    key: "sunita",
     img: "https://i.ibb.co/9kCD72CN/sunita-adhav-pic.jpg",
   },
+];
+
+const honourableChair = [
   {
-    key: "aishwaryayadav",
+    key: "aishwarya",
     img: "https://i.postimg.cc/Jn38vRqY/aishwarya-pic.jpg0",
   },
   {
-    key: "anujasharma",
+    key: "anuja",
     img: "https://i.postimg.cc/MHWw8g36/anuja-pic.jpg",
   },
 ];
@@ -155,7 +158,7 @@ const About = () => {
           {mentors.map((mentor, idx) => (
             <Link
               key={idx}
-              to={`/profile/${encodeURIComponent(t(`mentor.${mentor.key}.name`))}`}
+              to={`/abouteveryone/${mentor.key}`}
               className={`${styles.teamCard} ${styles.fadeInUp}`}
               style={{ textDecoration: "none" }}
             >
@@ -175,11 +178,38 @@ const About = () => {
         </div>
       </section>
 
+      {/* Honourable Chair */}
+      <section className={styles.mentorsSection}>
+        <h2 className={styles.sectionTitle}>{t("honourableChair")}</h2>
+        <div className={styles.teamGrid}>
+          {honourableChair.map((chair, idx) => (
+            <Link
+              key={idx}
+              to={`/abouteveryone/${chair.key}`}
+              className={`${styles.teamCard} ${styles.fadeInUp}`}
+              style={{ textDecoration: "none" }}
+            >
+              <img
+                src={chair.img}
+                alt={t(`honourableChairProfiles.${chair.key}.name`)}
+                className={styles.teamImage}
+              />
+              <h3 className={styles.teamName}>
+                {t(`honourableChairProfiles.${chair.key}.name`)}
+              </h3>
+              <p className={styles.teamRole}>
+                {t(`honourableChairProfiles.${chair.key}.role`)}
+              </p>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       {/* Our Founder */}
       <section className={styles.founderSection} style={{ backgroundColor: '#fff', border: 'none', margin: 0 }}>
         <h2 className={styles.sectionTitle}>{t("ourFounder")}</h2>
         <Link
-          to={`/profile/${encodeURIComponent(t(`team.${projectDirector.key}.name`))}`}
+          to={`/abouteveryone/${projectDirector.key}`}
           className={`${styles.founderCard} ${styles.fadeInUp}`}
           style={{ textDecoration: "none" }}
         >
@@ -204,7 +234,7 @@ const About = () => {
           {teamMembers.map((member, idx) => (
             <Link
               key={idx}
-              to={`/profile/${encodeURIComponent(t(`team.${member.key}.name`))}`}
+              to={`/abouteveryone/${member.key}`}
               className={`${styles.teamCard} ${styles.fadeInUp}`}
               style={{ textDecoration: "none" }}
             >
